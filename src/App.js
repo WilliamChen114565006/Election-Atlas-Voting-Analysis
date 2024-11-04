@@ -8,6 +8,7 @@ import Tab from './Tab';
 import Legend from './Legend';
 import Papa from 'papaparse';
 
+
 const centerLouisiana = [30.38592258905744, -84.96937811139156];
 const centerNewJersey = [40.220596, -71.369913];
 const centerDefault = [38.697719608746134, -91.89299027955271];
@@ -267,6 +268,7 @@ export default function App() {
 
   useEffect(() => {
     if (currentMap === 'louisiana') {
+
       fetch('/LADistricts.json')
         .then((response) => response.json())
         .then((data) => {
@@ -274,6 +276,7 @@ export default function App() {
           console.log('Louisiana GeoJSON loaded:', data);
         })
         .catch((error) => console.error('Error loading GeoJSON 1:', error));
+
     }
   }, [currentMap]);
 
