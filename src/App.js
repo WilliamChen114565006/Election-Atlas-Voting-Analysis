@@ -7,6 +7,7 @@ import InfoPanel from './InfoPanel';
 import Tab from './Tab';
 import Legend from './Legend';
 import Papa from 'papaparse';
+import axios from 'axios';
 
 
 const centerLouisiana = [30.38592258905744, -84.96937811139156];
@@ -53,7 +54,6 @@ export default function App() {
   const [isAllIncomeData2, setisAllIncomeData2] = useState([]);
   const [minorityDensityDataNJ, setMinorityDensityDataNJ] = useState([]);
 
-  // let allVoteData = [];
   let allIncomeData=[];
   
   const changeLegendColorIncome =()=>{
@@ -166,23 +166,30 @@ export default function App() {
     });
   };
 
-  loadDataLAIncome()
-  .then(incomeData => {
-    // allIncomeData = incomeData;
-    setisAllIncomeData(incomeData)
-  })
-  .catch(error => {
-    console.error('Error loading data:', error);
-  });
+  useEffect(() => {
+    loadDataLAIncome()
+    .then(incomeData => {
+      // allIncomeData = incomeData;
+      setisAllIncomeData(incomeData)
+    })
+    .catch(error => {
+      console.error('Error loading data:', error);
+    });
+  loadDataLAIncome();
+  }, []);
 
-  loadDataNJIncome()
-  .then(incomeData2 => {
-    // allIncomeData = incomeData;
-    setisAllIncomeData2(incomeData2)
-  })
-  .catch(error => {
-    console.error('Error loading data:', error);
-  });
+  useEffect(() => {
+    loadDataNJIncome()
+    .then(incomeData2 => {
+      // allIncomeData = incomeData;
+      setisAllIncomeData2(incomeData2)
+    })
+    .catch(error => {
+      console.error('Error loading data:', error);
+    });
+    loadDataNJIncome();
+  }, []);
+
   const loadData_Minority_LA = () => {
     const csvFilePath = 'LA_District_Minority_Density.csv';
   
@@ -233,38 +240,50 @@ export default function App() {
     });
   };
 
-  loadData()
-  .then(voteData => {
-    allVoteData = voteData;
-  })
-  .catch(error => {
-    console.error('Error loading data:', error);
-  });
+  useEffect(() => {
+    loadData()
+    .then(voteData => {
+      allVoteData = voteData;
+    })
+    .catch(error => {
+      console.error('Error loading data:', error);
+    });
+  loadData();
+  }, []);
 
-  loadData2()
-  .then(voteData2 => {
-    // console.log(allVoteData2)
-    setAllVoteData2(voteData2)
-  })
-  .catch(error => {
-    console.error('Error loading data:', error);
-  });
+  useEffect(() => {
+    loadData2()
+    .then(voteData2 => {
+      // console.log(allVoteData2)
+      setAllVoteData2(voteData2)
+    })
+    .catch(error => {
+      console.error('Error loading data:', error);
+    });
+  loadData2();
+  }, []);
 
-  loadData_Minority_LA()
-  .then(minorityData => {
-    setMinorityDensityDataLA(minorityData);
-  })
-  .catch(error => {
-    console.error('Error loading data:', error);
-  });
+  useEffect(() => {
+    loadData_Minority_LA()
+    .then(minorityData => {
+      setMinorityDensityDataLA(minorityData);
+    })
+    .catch(error => {
+      console.error('Error loading data:', error);
+    });
+  loadData_Minority_LA();
+  }, []);
 
-  loadData_Minority_NJ()
-  .then(minorityData => {
-    setMinorityDensityDataNJ(minorityData);
-  })
-  .catch(error => {
-    console.error('Error loading data:', error);
-  });
+  useEffect(() => {
+    loadData_Minority_NJ()
+    .then(minorityData => {
+      setMinorityDensityDataNJ(minorityData);
+    })
+    .catch(error => {
+      console.error('Error loading data:', error);
+    });
+    loadData_Minority_NJ();
+  }, []);
 
   useEffect(() => {
     if (currentMap === 'louisiana') {
@@ -280,17 +299,6 @@ export default function App() {
     }
   }, [currentMap]);
 
-  useEffect(() => {
-    if (currentMap === 'newjersey') {
-      fetch('/NJDistricts.geojson')
-        .then((response) => response.json())
-        .then((data) => {
-          setGeojsonData2(data);
-          console.log('New Jersey GeoJSON loaded:', data);
-        })
-        .catch((error) => console.error('Error loading GeoJSON 2:', error));
-    }
-  }, [currentMap]);
 
   const handleDistrictsClick = () => {
     if (selectedState === 'Louisiana') {
@@ -840,6 +848,26 @@ const onEachPrecinctFeature = (feature, layer) => {
       setShowDistrictsLA(true);
 
     } else if (selection === 'newjersey') {
+
+
+
+
+
+  //CLIENT SERVER PRESENTATION
+  const fetch_NJ_Districts_GeoJson = async () => {
+      try {
+          const response = await axios.get('http://localhost:8080/Data/NJ/Districts/geojson');    //**AXIOS REQUEST**
+          setGeojsonData2(response.data);
+      } catch (error) {
+          console.error('Error fetching GeoJSON:', error);
+      }
+  };
+    
+
+
+
+
+      fetch_NJ_Districts_GeoJson();
       setCurrentMap('newjersey');
       setSelectedState("New Jersey");
       setCurrArea("New Jersey")
@@ -1025,11 +1053,19 @@ const onEachPrecinctFeature = (feature, layer) => {
 
 
 
+
+
           {showDistrictsNJ && geojsonData2 && (
             <GeoJSON data={geojsonData2} style={isIncomeLegend === "income" ? getDistrictNJStyleIncome :
               isIncomeLegend === "voting" ? getFeatureStyle :
               isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_NJ : null} onEachFeature={onEachFeature} />
+          
+              //CLIENT-SERVER PRESENTATION
           )}
+
+
+
+
 
 
           {showPrecinctsLA && precinctsDataLA && (
