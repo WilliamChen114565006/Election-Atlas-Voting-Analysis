@@ -8,6 +8,7 @@ import Tab from './Tab';
 import Legend from './Legend';
 import Papa from 'papaparse';
 import axios from 'axios';
+import useFetchLegendColor from './useFetchLegendColor';
 
 
 const centerLouisiana = [30.38592258905744, -84.96937811139156];
@@ -120,8 +121,8 @@ export default function App() {
         download: true,
         header: true,
         complete: (result) => {
-  
-          const voteData = result.data.map(row => ({
+          console.log("Hey, this was called");
+          const voteData = result.data.map(row => ({  
             precinct: row['Precinct'],
             bidenVote: parseFloat(row['BIDEN']),
             trumpVote: parseFloat(row['TRUMP'])
@@ -285,19 +286,19 @@ export default function App() {
     loadData_Minority_NJ();
   }, []);
 
-  useEffect(() => {
-    if (currentMap === 'louisiana') {
+  // useEffect(() => {
+  //   if (currentMap === 'louisiana') {
 
-      fetch('/LADistricts.json')
-        .then((response) => response.json())
-        .then((data) => {
-          setGeojsonData1(data);
-          console.log('Louisiana GeoJSON loaded:', data);
-        })
-        .catch((error) => console.error('Error loading GeoJSON 1:', error));
+  //     fetch('/LADistricts.json')
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setGeojsonData1(data);
+  //         console.log('Louisiana GeoJSON loaded:', data);
+  //       })
+  //       .catch((error) => console.error('Error loading GeoJSON 1:', error));
 
-    }
-  }, [currentMap]);
+  //   }
+  // }, [currentMap]);
 
 
   const handleDistrictsClick = () => {
@@ -336,15 +337,25 @@ export default function App() {
     }
   };
 
-  const fetchLAPrecinctsData = () => {
-    fetch('la_gen_2022_prec.geojson')
-      .then((response) => response.json())
-      .then((data) => {
-        setPrecinctsDataLA(data);
-        setPrecinctsDataNJ(null);
-        console.log('Louisiana Precincts GeoJSON loaded:', data);
-      })
-      .catch((error) => console.error('Error loading Louisiana precincts GeoJSON:', error));
+  // const fetchLAPrecinctsData = () => {
+  //   fetch('la_gen_2022_prec.geojson')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setPrecinctsDataLA(data);
+  //       setPrecinctsDataNJ(null);
+  //       console.log('Louisiana Precincts GeoJSON loaded:', data);
+  //     })
+  //     .catch((error) => console.error('Error loading Louisiana precincts GeoJSON:', error));
+  // };
+
+  const fetchLAPrecinctsData = async() => {
+    try {
+      const response = await axios.get('http://localhost:8080/Data/la/_gen_2022_prec/geojson');
+      setPrecinctsDataLA(response.data);
+      setPrecinctsDataNJ(null);
+    } catch (error) {
+      console.error('Error fetching GeoJSON:', error);
+    }
   };
 
   const handlePrecinctsClickLA = () => {
@@ -365,20 +376,31 @@ const handlePrecinctsClickNJ = () => {
   setShowDistrictsNJ(false);
 };
   
-  const fetchNJPrecinctsData = () => {
-    fetch('NJPrecincts2.geojson')
-      .then((response) => response.json())
-      .then((data) => {
-        setPrecinctsDataNJ(data);
-        setPrecinctsDataLA(null);
-        console.log('New Jersey Precincts GeoJSON loaded:', data);
-      })
-      .catch((error) => console.error('Error loading New Jersey precincts GeoJSON:', error));
+  // const fetchNJPrecinctsData = () => {
+  //   fetch('NJPrecincts2.geojson')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setPrecinctsDataNJ(data);
+  //       setPrecinctsDataLA(null);
+  //       console.log('New Jersey Precincts GeoJSON loaded:', data);
+  //     })
+  //     .catch((error) => console.error('Error loading New Jersey precincts GeoJSON:', error));
+  // };
+
+  const fetchNJPrecinctsData = async() => {
+    try {
+      const response = await axios.get('http://localhost:8080/Data/NJ/Precincts2/geojson');
+      setPrecinctsDataNJ(response.data);
+      setPrecinctsDataLA(null);
+    } catch (error) {
+      console.error('Error fetching GeoJSON:', error);
+    }
   };
+
+
 
   const getFeatureStyle = (feature) => {
     const party = feature.properties.party;
-
     return {
       fillColor: party === 'Republican' ? 'red' : party === 'Democrat' ? 'blue' : '#ffffff',
       color: '#000000',
@@ -590,11 +612,11 @@ const handlePrecinctsClickNJ = () => {
   const getPrecinctStyle = (feature) => {
     let precinctname = feature.properties.Parish + " " + feature.properties.Precinct;
     let name = " ";
-
+    
     // console.log(precinctname)
     allVoteData.forEach(data => {
       // console.log(`Precinct: ${data.precinct}, Biden Votes: ${data.bidenVote}, Trump Votes: ${data.trumpVote}`);
-
+      
       if(precinctname === data.precinct){
         if(data.bidenVote > data.trumpVote)
         {
@@ -830,6 +852,16 @@ const onEachPrecinctFeature = (feature, layer) => {
   
   const handleSelection = (selection) => {
     if (selection === 'louisiana') {
+      const fetch_LA_Districts_GeoJson = async () => {
+        try {
+          const response = await axios.get('http://localhost:8080/Data/LA/Districts/json');
+          setGeojsonData1(response.data);
+        } catch (error) {
+          console.error('Error fetching GeoJSON:', error);
+        }
+      };
+
+      fetch_LA_Districts_GeoJson();
       setCurrentMap('louisiana');
       setSelectedState("Louisiana");
       setCurrArea("Louisiana")
@@ -849,22 +881,16 @@ const onEachPrecinctFeature = (feature, layer) => {
 
     } else if (selection === 'newjersey') {
 
-
-
-
-
-  //CLIENT SERVER PRESENTATION
-  const fetch_NJ_Districts_GeoJson = async () => {
+    //CLIENT SERVER PRESENTATION
+    const fetch_NJ_Districts_GeoJson = async () => {
       try {
           const response = await axios.get('http://localhost:8080/Data/NJ/Districts/geojson');    //**AXIOS REQUEST**
           setGeojsonData2(response.data);
       } catch (error) {
           console.error('Error fetching GeoJSON:', error);
       }
-  };
+    };
     
-
-
 
 
       fetch_NJ_Districts_GeoJson();
