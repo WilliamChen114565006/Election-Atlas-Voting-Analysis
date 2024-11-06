@@ -62,9 +62,9 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
   const getPopulation = () => {
     switch (stateName) {
       case 'Louisiana':
-        return "37.6";
+        return "4.57 Million";
       case 'New Jersey':
-        return "40";
+        return "9.29 Million";
       default:
         return 'N/A'; 
     }
@@ -131,7 +131,7 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
             </div>
 
             <div style={{fontSize: "20px"}}>
-              <span style={{ fontWeight: 'bold' }}>Median Age: </span>
+              <span style={{ fontWeight: 'bold' }}>State Population: </span>
               <span>{getPopulation()} </span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Districts: </span>
               <span>{getDistrictAmt()}</span>
@@ -145,6 +145,7 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               <Tab label="Overview" sx={{ textTransform: 'none', fontWeight: 'bold', fontSize: '1.2rem' }}/>
               <Tab label="Precinct Voting Analysis" sx={{ textTransform: 'none', fontWeight: 'bold', fontSize: '1.2rem' }}/>
               <Tab label="Ecological Inference" sx={{ textTransform: 'none', fontWeight: 'bold', fontSize: '1.2rem' }}/>
+              <Tab label="Congressional Representation Table" sx={{ textTransform: 'none', fontWeight: 'bold', fontSize: '1.2rem' }}/>
             </Tabs>
             <Box sx={{ padding: 2 }}>
               {activeTab === 0 && (
@@ -168,7 +169,7 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
                 </>
               )}
               {activeTab === 2 && <div className='BarChartsContainer'><BoxWhiskerPlot /></div>}
-              {activeTab === 3 && <p>Test for Tab 4</p>}
+              {activeTab === 3 && <p>Display district plan table for when we click on district GUI: 8</p>}
             </Box>
           </div>
         </>

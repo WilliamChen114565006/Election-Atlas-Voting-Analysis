@@ -10,7 +10,6 @@ import Papa from 'papaparse';
 import axios from 'axios';
 import useFetchLegendColor from './useFetchLegendColor';
 
-
 const centerLouisiana = [30.38592258905744, -84.96937811139156];
 const centerNewJersey = [40.220596, -71.369913];
 const centerDefault = [38.697719608746134, -91.89299027955271];
@@ -55,19 +54,14 @@ export default function App() {
   const [isAllIncomeData2, setisAllIncomeData2] = useState([]);
   const [minorityDensityDataNJ, setMinorityDensityDataNJ] = useState([]);
 
+  
   let allIncomeData=[];
   
-  const changeLegendColorIncome =()=>{
-      setIncomeLegend("income");
+  const changeLegendColor = (type) => {
+    setIncomeLegend(type);
   };
 
-  const changeLegendColorVoting=()=>{
-      setIncomeLegend('voting');
-  };
-
-  const changeLegendColorRace=()=>{
-      setIncomeLegend("race")
-  }
+  const { colors, loading, error } = useFetchLegendColor(isIncomeLegend);
 
   const mapRef = useRef();
 
@@ -337,16 +331,6 @@ export default function App() {
     }
   };
 
-  // const fetchLAPrecinctsData = () => {
-  //   fetch('la_gen_2022_prec.geojson')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setPrecinctsDataLA(data);
-  //       setPrecinctsDataNJ(null);
-  //       console.log('Louisiana Precincts GeoJSON loaded:', data);
-  //     })
-  //     .catch((error) => console.error('Error loading Louisiana precincts GeoJSON:', error));
-  // };
 
   const fetchLAPrecinctsData = async() => {
     try {
@@ -376,17 +360,6 @@ const handlePrecinctsClickNJ = () => {
   setShowDistrictsNJ(false);
 };
   
-  // const fetchNJPrecinctsData = () => {
-  //   fetch('NJPrecincts2.geojson')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setPrecinctsDataNJ(data);
-  //       setPrecinctsDataLA(null);
-  //       console.log('New Jersey Precincts GeoJSON loaded:', data);
-  //     })
-  //     .catch((error) => console.error('Error loading New Jersey precincts GeoJSON:', error));
-  // };
-
   const fetchNJPrecinctsData = async() => {
     try {
       const response = await axios.get('http://localhost:8080/Data/NJ/Precincts2/geojson');
@@ -401,8 +374,10 @@ const handlePrecinctsClickNJ = () => {
 
   const getFeatureStyle = (feature) => {
     const party = feature.properties.party;
+
+    const partyColor = colors[party] || '#ffffff';
     return {
-      fillColor: party === 'Republican' ? 'red' : party === 'Democrat' ? 'blue' : '#ffffff',
+      fillColor: partyColor,
       color: '#000000',
       weight: 0.5,
       opacity: 1,
@@ -412,197 +387,148 @@ const handlePrecinctsClickNJ = () => {
 
   const getDistrictLAStyleIncome = (feature) => {
     let districtName = feature.properties.name;
-    let color="";
-    
+    let incomeRange = "";
+
     isAllIncomeData.forEach(data => {
-      // console.log(`district: ${data.district}, Range: ${data.houseHoldIncomeRange}`);
-        if (districtName === (data.district)) {
-
+      if (districtName === data.district) {
         if (data.houseHoldIncomeRange < 2) {
-            color = "a";
+          incomeRange = "10k-20k";
         } else if (data.houseHoldIncomeRange < 5) {
-            color = "b";
+          incomeRange = "20k-35k";
         } else if (data.houseHoldIncomeRange < 8) {
-            color = "c";
+          incomeRange = "35k-50k";
         } else if (data.houseHoldIncomeRange < 11) {
-            color = 'd';
+          incomeRange = '50k-100k';
         } else if (data.houseHoldIncomeRange < 14) {
-            color = 'e';
-        } else if (data.houseHoldIncomeRange > 14) {
-            color = 'f';
+          incomeRange = '100k-200k';
+        } else if (data.houseHoldIncomeRange >= 14) {
+          incomeRange = '200k+';
         }
-
-        }
+      }
     });
 
-    return {
-        fillColor: color === 'a' ? '#99ccff' : color === 'b' ? '#6699ff' : 
-        color === 'c' ? '#3366ff' : 
-        color === 'd' ? '#3333ff' : 
-        color === 'e' ? '#000066' : 
-        color === 'f' ? '#00001a' : 'white',
-        color: '#000000',
-        weight: 0.5,
-        opacity: 1,
-        fillOpacity: 0.6,
-    };
+  const fillColor = colors[incomeRange] || 'white';  
+
+  return {
+    fillColor: fillColor,
+    color: '#000000',
+    weight: 0.5,
+    opacity: 1,
+    fillOpacity: 0.6,
+  };
   }
 
   const getDistrictNJStyleIncome =(feature) =>{
     let districtName = feature.properties.DISTRICT;
-    let color="";
-    
-    isAllIncomeData2.forEach(data => {
-        if (("District "+districtName) === (data.district)) {
+    let incomeRange = "";
 
-        if (data.houseHoldIncomeRange < 2) {
-            color = "a";
-        } else if (data.houseHoldIncomeRange < 5) {
-            color = "b";
-        } else if (data.houseHoldIncomeRange < 8) {
-            color = "c";
-        } else if (data.houseHoldIncomeRange < 11) {
-            color = 'd';
-        } else if (data.houseHoldIncomeRange < 14) {
-            color = 'e';
-        } else if (data.houseHoldIncomeRange > 14) {
-            color = 'f';
-        }
+  isAllIncomeData2.forEach(data => {
+    if (("District " + districtName) === data.district) {
+      if (data.houseHoldIncomeRange < 2) {
+        incomeRange = "10k-20k";
+      } else if (data.houseHoldIncomeRange < 5) {
+        incomeRange = "20k-35k";
+      } else if (data.houseHoldIncomeRange < 8) {
+        incomeRange = "35k-50k";
+      } else if (data.houseHoldIncomeRange < 11) {
+        incomeRange = '50k-100k';
+      } else if (data.houseHoldIncomeRange < 14) {
+        incomeRange = '100k-200k';
+      } else if (data.houseHoldIncomeRange >= 14) {
+        incomeRange = '200k+';
+      }
+    }
+  });
 
-        }
-    });
+  const fillColor = colors[incomeRange] || 'white'; 
 
-    return {
-        fillColor: color === 'a' ? '#99ccff' : color === 'b' ? '#6699ff' : 
-        color === 'c' ? '#3366ff' : 
-        color === 'd' ? '#3333ff' : 
-        color === 'e' ? '#000066' : 
-        color === 'f' ? '#00001a' : 'white',
-        color: '#000000',
-        weight: 0.5,
-        opacity: 1,
-        fillOpacity: 0.6,
-    };
+  return {
+    fillColor: fillColor,
+    color: '#000000',
+    weight: 0.5,
+    opacity: 1,
+    fillOpacity: 0.6,
+  };
   }
   //RACE COLORING FOR LA
   const getFeatureStyle_Race_Heat_Map_LA = (feature) => {
     let districtName = feature.properties.name;
     let color = "";
-    // console.log(districtName);
-    minorityDensityDataLA.forEach(data => {
-      if(districtName === data.district){
-        //console.log("MARIOOOOOOOOOOOOOOOOO");
-        if(data.minorityPercent > 91)
-        {
-          color = "A";
-        }
-        else if(data.minorityPercent > 81)
-        {
-            color = "B";
-        }
-        else if(data.minorityPercent > 71)
-        {
-          color = "C";
-        }
-        else if(data.minorityPercent > 61)
-        {
-          color = "D";
-        }
-        else if(data.minorityPercent > 51)
-        {
-          color = "E";
-        }
-        else if(data.minorityPercent > 41)
-        {
-          color = "F";
-        }
-        else if(data.minorityPercent > 31)
-        {
-          color = "G";
-        }
-        else if(data.minorityPercent > 21)
-        {
-          color = "H";
-        }
-        else if(data.minorityPercent > 11)
-        {
-          color = "I";
-        }
-        else{
-          color = "J";
-        }
-        return; 
-      }
-    });
-  
-    return {
-      fillColor: color === 'A' ? '#B33D00' : color === 'B' ? '#CC4D00' : color === 'C' ? '#E65C00' 
-      : color === 'D' ? '#FF6A00' : color === 'E' ? '#FF7800' : color === 'F' ? '#FF8F1C' : color === 'G' ? '#FFA84C'
-      : color === 'H' ? '#FFC07F' : color === 'I' ? '#FFD194' : color === 'J' ? '#FFE5B4' : '#ffffff',
 
-      color: '#000000',
-      weight: 0.5,
-      opacity: 1,
-      fillOpacity: highlightedFeature === feature ? 0.7 : 0.5,
-    };
+    minorityDensityDataLA.forEach(data => {
+    if (districtName === data.district) {
+      if (data.minorityPercent > 91) {
+        color = "91%-100%";
+      } else if (data.minorityPercent > 81) {
+        color = "81%-90%";
+      } else if (data.minorityPercent > 71) {
+        color = "71%-80%";
+      } else if (data.minorityPercent > 61) {
+        color = "61%-70%";
+      } else if (data.minorityPercent > 51) {
+        color = "51%-60%";
+      } else if (data.minorityPercent > 41) {
+        color = "41%-50%";
+      } else if (data.minorityPercent > 31) {
+        color = "31%-40%";
+      } else if (data.minorityPercent > 21) {
+        color = "21%-30%";
+      } else if (data.minorityPercent > 11) {
+        color = "11%-20%";
+      } else {
+        color = "0%-10%";
+      }
+      return;
+    }
+  });
+
+  const fillColor = colors[color] || '#ffffff';  
+
+  return {
+    fillColor: fillColor,
+    color: '#000000',
+    weight: 0.5,
+    opacity: 1,
+    fillOpacity: highlightedFeature === feature ? 0.7 : 0.5,
+  };
   };
 
   const getFeatureStyle_Race_Heat_Map_NJ = (feature) => {
     let districtName = feature.properties.DIST_LABEL;
     let color = "";
-    //console.log(districtName);
-    //console.log(minorityDensityDataNJ);
+  
     minorityDensityDataNJ.forEach(data => {
-      if(districtName === data.district){
-        //console.log("MARIOOOOOOOOOOOOOOOOO");
-        if(data.minorityPercent > 91)
-        {
-          color = "A";
-        }
-        else if(data.minorityPercent > 81)
-        {
-            color = "B";
-        }
-        else if(data.minorityPercent > 71)
-        {
-          color = "C";
-        }
-        else if(data.minorityPercent > 61)
-        {
-          color = "D";
-        }
-        else if(data.minorityPercent > 51)
-        {
-          color = "E";
-        }
-        else if(data.minorityPercent > 41)
-        {
-          color = "F";
-        }
-        else if(data.minorityPercent > 31)
-        {
-          color = "G";
-        }
-        else if(data.minorityPercent > 21)
-        {
-          color = "H";
-        }
-        else if(data.minorityPercent > 11)
-        {
-          color = "I";
-        }
-        else{
-          color = "J";
+      if (districtName === data.district) {
+        if (data.minorityPercent > 91) {
+          color = "91%-100%";
+        } else if (data.minorityPercent > 81) {
+          color = "81%-90%";
+        } else if (data.minorityPercent > 71) {
+          color = "71%-80%";
+        } else if (data.minorityPercent > 61) {
+          color = "61%-70%";
+        } else if (data.minorityPercent > 51) {
+          color = "51%-60%";
+        } else if (data.minorityPercent > 41) {
+          color = "41%-50%";
+        } else if (data.minorityPercent > 31) {
+          color = "31%-40%";
+        } else if (data.minorityPercent > 21) {
+          color = "21%-30%";
+        } else if (data.minorityPercent > 11) {
+          color = "11%-20%";
+        } else {
+          color = "0%-10%";
         }
         return; 
       }
     });
-  
-    return {
-      fillColor: color === 'A' ? '#B33D00' : color === 'B' ? '#CC4D00' : color === 'C' ? '#E65C00' 
-      : color === 'D' ? '#FF6A00' : color === 'E' ? '#FF7800' : color === 'F' ? '#FF8F1C' : color === 'G' ? '#FFA84C'
-      : color === 'H' ? '#FFC07F' : color === 'I' ? '#FFD194' : color === 'J' ? '#FFE5B4' : '#ffffff', color: '#000000',
 
+    const fillColor = colors[color] || '#ffffff'; 
+
+   return {
+      fillColor: fillColor,
+      color: '#000000',
       weight: 0.5,
       opacity: 1,
       fillOpacity: highlightedFeature === feature ? 0.7 : 0.5,
@@ -689,6 +615,8 @@ const handlePrecinctsClickNJ = () => {
   });
 
 
+
+  
   const onEachFeature = (feature, layer) => {
     layer.on({
       mouseover: () => {
@@ -1031,7 +959,7 @@ const onEachPrecinctFeature = (feature, layer) => {
         currArea={currArea}
         currState={selectedState}
         handleArrowClick={handleArrowClick}
-        legendColorBtn={changeLegendColorIncome}/>
+        />
 
       )}
       
@@ -1042,13 +970,13 @@ const onEachPrecinctFeature = (feature, layer) => {
         onPrecinctsClickNJ={handlePrecinctsClickNJ}
         onDistrictsClick={handleDistrictsClick}
         fakecurrArea={fakecurrArea}
-        changeLegendIncome={changeLegendColorIncome}
-        changeVotingColor={changeLegendColorVoting}
-        changeLegendColor={changeLegendColorRace}
+        changeLegendColor2={changeLegendColor}
       />
 
       <Legend isVisible={isLegendVisible}
-      legendColor={isIncomeLegend} />
+      legendColor={isIncomeLegend}
+      colors={colors}
+      />
 
       <div className={`siteBody ${isInfoVisible ? 'siteBody-shrink' : ''}`}>
       <div className='map-container'>

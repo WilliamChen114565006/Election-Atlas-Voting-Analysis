@@ -1,13 +1,8 @@
-// Legend.js
 import React from 'react';
 import './App.css';
-import useFetchLegendColor from './useFetchLegendColor';
 
-export default function Legend({ isVisible, legendColor}) {
-  const { colors, loading, error } = useFetchLegendColor(legendColor);
-
-  if (!isVisible || loading) return null;
-  if (error) return <div>Error: {error}</div>;
+export default function Legend({ isVisible, legendColor, colors }) {
+  if (!isVisible || !colors) return null; // Ensure colors are available before rendering
 
   return (
     <div className="legend-container">
@@ -22,6 +17,4 @@ export default function Legend({ isVisible, legendColor}) {
       </ul>
     </div>
   );
-
-
 }

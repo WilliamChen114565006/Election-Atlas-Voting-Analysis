@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 
-const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onDistrictsClick, fakecurrArea, changeLegendIncome, changeVotingColor, changeLegendColor}) => {
+const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onDistrictsClick, fakecurrArea, changeLegendColor2}) => {
   // State to track the active legend buttons
   const [activeLegendButton, setActiveLegendButton] = useState('votingbutton'); // Set initial highlight for Voting
   // State to track the active precinct or district button
@@ -10,9 +10,11 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
   const handleLegendButtonClick = (buttonId) => {
     setActiveLegendButton(buttonId);
     // Call the respective function based on the button clicked
-    if (buttonId === 'votingbutton') changeVotingColor();
-    else if (buttonId === 'racebutton') changeLegendColor();
-    else if (buttonId === 'incomebutton') changeLegendIncome();
+    if (buttonId === 'votingbutton') changeLegendColor2("voting");
+    else if (buttonId === 'racebutton') changeLegendColor2("race");
+    else if (buttonId === 'incomebutton') changeLegendColor2("income");
+    //test
+    else if(buttonId === 'regionbutton') changeLegendColor2("voting");
   };
 
   const handlePrecinctDistrictClick = (type) => {
@@ -43,12 +45,20 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
           Race
         </button>
         <button 
+          id="regionbutton" 
+          className={activeLegendButton === 'regionbutton' ? 'active' : ''} 
+          onClick={() => handleLegendButtonClick('regionbutton')}
+        >
+          Region
+        </button>
+        <button 
           id="incomebutton" 
           className={activeLegendButton === 'incomebutton' ? 'active' : ''} 
           onClick={() => handleLegendButtonClick('incomebutton')}
         >
           Income
         </button>
+        
         {/* <div id="precinct-district-buttons"> */}
         <button 
           id="districtbutton" 
