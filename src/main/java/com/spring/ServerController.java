@@ -40,7 +40,7 @@ public class ServerController {
 
     
     //endpoint for each districts, fetching information based on the districts (GUI 4)
-    @GetMapping("/Data/Districts/{state}/{districtNum}")
+    @GetMapping("/info/Districts/{state}/{districtNum}")
     public String getDistrictInfo(@RequestParam String param) {
         return new String();
     }
@@ -54,10 +54,23 @@ public class ServerController {
     
 
     //endpoint for the general info, fetching for infoPanel information about the state (GUI 3)
-    @GetMapping("/Data/info/{state}/{district}/")
-    public String getGeneralInfo(@PathVariable String state, @PathVariable String district) {
-        //search through based on district in the csv
-        return new String();
+    @GetMapping("/info/{state}")
+    public Map<String, Object> getGeneralInfo(@PathVariable String state) throws IOException {
+        String filename;
+        switch (state.toLowerCase()) {
+            case "louisiana":
+                filename = "info/LAInfo.json";
+                break;
+            case "new jersey":
+                filename = "info/NJInfo.json";
+                break;
+            default:
+                throw new IllegalArgumentException("State data not available");
+        }
+
+        // Load JSON file from resources folder
+        ClassPathResource resource = new ClassPathResource(filename);
+        return objectMapper.readValue(resource.getInputStream(), Map.class);
     }
     
 

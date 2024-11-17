@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 export default function Legend({ isVisible, legendColor, colors }) {
-  if (!isVisible || !colors) return null; // Ensure colors are available before rendering
+  if (!isVisible || !colors) return null; 
 
   return (
     <div className="legend-container">
