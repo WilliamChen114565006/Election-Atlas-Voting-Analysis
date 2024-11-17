@@ -53,8 +53,8 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
 
   const fetchStateData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/info/${stateName}`);
-      setStateData(response.data.summary);
+      const response = await axios.get(`http://localhost:8080/info/${stateName}/summary`);
+      setStateData(response.data);
     } catch (error) {
       console.error('Error fetching state data:', error);
     }
@@ -144,7 +144,7 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
 
             <div style={{fontSize: "20px"}}>
               <span style={{ fontWeight: 'bold' }}>State Population: </span>
-              <span>{stateData?.statePopulation?.toLocaleString() || ''} </span>
+              <span>{stateData?.statePopulation || ''} </span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Party Control: </span>
               <span>{stateData?.partyControlRedistricting?.toLocaleString() || ""}</span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Precinct: </span>

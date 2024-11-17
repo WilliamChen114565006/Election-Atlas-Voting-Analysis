@@ -10,16 +10,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Repository.LARepo;
+import com.Repository.StateSummaryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.Model.Feature;
+import com.Model.StateSummary;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.LinkedHashMap;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -54,25 +56,47 @@ public class ServerController {
     
 
     //endpoint for the general info, fetching for infoPanel information about the state (GUI 3)
-    @GetMapping("/info/{state}")
-    public Map<String, Object> getGeneralInfo(@PathVariable String state) throws IOException {
-        String filename;
-        switch (state.toLowerCase()) {
-            case "louisiana":
-                filename = "info/LAInfo.json";
-                break;
-            case "new jersey":
-                filename = "info/NJInfo.json";
-                break;
-            default:
-                throw new IllegalArgumentException("State data not available");
-        }
+    // @GetMapping("/info/{state}")
+    // public Map<String, Object> getStateSummary(@PathVariable String state) throws IOException {
+    //     String filename;
+    //     switch (state.toLowerCase()) {
+    //         case "louisiana":
+    //             filename = "info/LAInfo.json";
+    //             break;
+    //         case "new jersey":
+    //             filename = "info/NJInfo.json";
+    //             break;
+    //         default:
+    //             throw new IllegalArgumentException("State data not available");
+    //     }
 
-        // Load JSON file from resources folder
-        ClassPathResource resource = new ClassPathResource(filename);
-        return objectMapper.readValue(resource.getInputStream(), Map.class);
-    }
+    //     // Load JSON file from resources folder
+    //     ClassPathResource resource = new ClassPathResource(filename);
+    //     return objectMapper.readValue(resource.getInputStream(), Map.class);
+    // }
+
+    // @Autowired
+    // private StateSummaryRepository repository;
+    // @Cacheable(value="summaryData", key="#state + #keyName")
+    // @GetMapping("/info/{state}/{keyName}")
+    // public Map<String, Object> getStateSummary(@PathVariable String state, @PathVariable String keyName) {
+    //     System.out.println("First Time Running");
+    //     StateSummary summary = repository.findByStateIgnoreCase(state);
+
+    //     if (summary == null) {
+    //         throw new IllegalArgumentException("State data not available");
+    //     }
+    //     return summary.getSummary();
+    // }
     
+    @Autowired
+    private CacheHandler cacheHandler;
+
+    @GetMapping("/info/{state}/{keyName}")
+    public Map<String, Object> getStateSummary(@PathVariable String state, @PathVariable String keyName) {
+        return cacheHandler.getStateSummaryFromCache(state, keyName); // Delegate cache management
+    }
+
 
     @GetMapping("/Data/colors/{category}")
     public Map<String, String> getColors(@PathVariable String category) {
