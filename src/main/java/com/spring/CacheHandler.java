@@ -19,7 +19,7 @@ public class CacheHandler {
     @Autowired
     private StateSummaryRepository repository;
 
-
+    //OLD CACHE CODE *****************************
     public Map<String, Object> getStateSummaryFromCache(String state, String keyName) {
         String cacheKey = state + keyName;
         Cache cache = cacheManager.getCache("summaryData");
@@ -33,6 +33,7 @@ public class CacheHandler {
         }
 
         System.out.println("Cache miss for " + cacheKey);
+        //now we look through
         StateSummary summary = repository.findByStateIgnoreCase(state);
 
         if (summary == null) {
@@ -44,11 +45,25 @@ public class CacheHandler {
 
         return summaryData;
     }
+    //***********************
 
-    private void putToCache(String cacheKey, Map<String, Object> summaryData, String cacheName) {
+    public Map<String, Object> getFromCache(String cacheKey, String cacheName) {
         Cache cache = cacheManager.getCache(cacheName);
         if (cache != null) {
-            cache.put(cacheKey, summaryData);
+            Cache.ValueWrapper cachedValue = cache.get(cacheKey);
+            if (cachedValue != null) {
+                System.out.println("Cache hit for " + cacheKey);
+                return (Map<String, Object>) cachedValue.get();
+            }
+        }
+        System.out.println("Cache miss for " + cacheKey);
+        return null;
+    }
+
+    public void putToCache(String cacheKey, Map<String, Object> data, String cacheName) {
+        Cache cache = cacheManager.getCache(cacheName);
+        if (cache != null) {
+            cache.put(cacheKey, data);
             System.out.println("Cache updated for " + cacheKey);
         }
     }

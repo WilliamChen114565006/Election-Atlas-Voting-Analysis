@@ -55,46 +55,34 @@ public class ServerController {
     }
     
 
-    //endpoint for the general info, fetching for infoPanel information about the state (GUI 3)
-    // @GetMapping("/info/{state}")
-    // public Map<String, Object> getStateSummary(@PathVariable String state) throws IOException {
-    //     String filename;
-    //     switch (state.toLowerCase()) {
-    //         case "louisiana":
-    //             filename = "info/LAInfo.json";
-    //             break;
-    //         case "new jersey":
-    //             filename = "info/NJInfo.json";
-    //             break;
-    //         default:
-    //             throw new IllegalArgumentException("State data not available");
-    //     }
-
-    //     // Load JSON file from resources folder
-    //     ClassPathResource resource = new ClassPathResource(filename);
-    //     return objectMapper.readValue(resource.getInputStream(), Map.class);
-    // }
-
-    // @Autowired
-    // private StateSummaryRepository repository;
-    // @Cacheable(value="summaryData", key="#state + #keyName")
-    // @GetMapping("/info/{state}/{keyName}")
-    // public Map<String, Object> getStateSummary(@PathVariable String state, @PathVariable String keyName) {
-    //     System.out.println("First Time Running");
-    //     StateSummary summary = repository.findByStateIgnoreCase(state);
-
-    //     if (summary == null) {
-    //         throw new IllegalArgumentException("State data not available");
-    //     }
-    //     return summary.getSummary();
-    // }
+   //
     
     @Autowired
     private CacheHandler cacheHandler;
 
+    @Autowired
+    private StateSummaryRepository stateSumRepo;
+
+    //OLD CODE FOR STATE SUMMARY ENDPOINT *******
+    // @GetMapping("/info/{state}/{keyName}")
+    // public Map<String, Object> getStateSummary(@PathVariable String state, @PathVariable String keyName) {
+    //     return cacheHandler.getStateSummaryFromCache(state, keyName);
+    // }
+    //***************************** */
+
     @GetMapping("/info/{state}/{keyName}")
     public Map<String, Object> getStateSummary(@PathVariable String state, @PathVariable String keyName) {
-        return cacheHandler.getStateSummaryFromCache(state, keyName); // Delegate cache management
+        String cacheKey = state + keyName;
+        String cacheName = "summaryData";
+        Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
+        if (cachedData != null) {
+            return cachedData;
+        }
+        StateSummary summary = stateSumRepo.findByStateIgnoreCase(state);
+        Map<String, Object> summaryData = summary.getSummary();
+        cacheHandler.putToCache(cacheKey, summaryData, cacheName);
+
+        return summaryData;
     }
 
 
@@ -107,6 +95,11 @@ public class ServerController {
             e.printStackTrace();
             return Map.of(); 
         }
+    }
+
+    @GetMapping("/Data/Minority/{state}/{race}")
+    public Map<String, Object> getRaceDensity(@PathVariable String state, @PathVariable String race){
+        return null;
     }
     
     @GetMapping("/Data/{state}/{geoLevel}/{fileType}")
