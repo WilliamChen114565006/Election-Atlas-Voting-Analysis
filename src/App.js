@@ -2,13 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import { MapContainer, GeoJSON, TileLayer} from 'react-leaflet';
 import {statesData} from "./data"
 import 'leaflet/dist/leaflet.css';
-import './App.css';
-import InfoPanel from './InfoPanel';
-import Tab from './Tab';
-import Legend from './Legend';
+import './styles/App.css';
+import InfoPanel from './components/InfoPanel';
+import Tab from './components/Tab';
+import Legend from './components/Legend';
 import Papa from 'papaparse';
 import axios from 'axios';
-import useFetchLegendColor from './useFetchLegendColor';
+import useFetchLegendColor from './api/useFetchLegendColor';
 
 const centerLouisiana = [30.38592258905744, -84.96937811139156];
 const centerNewJersey = [40.220596, -71.369913];
@@ -21,8 +21,6 @@ const zoomLevels = {
 };
 
 let allVoteData = [];
-// let allVoteData2 = [];
-
 const defaultZoom = 4.5
 
 export default function App() {
@@ -54,9 +52,11 @@ export default function App() {
   const [isAllIncomeData2, setisAllIncomeData2] = useState([]);
   const [minorityDensityDataNJ, setMinorityDensityDataNJ] = useState([]);
 
-  
-  let allIncomeData=[];
-  
+  const StateEnum = Object.freeze({
+    LOUISIANA: 'louisiana',
+    NEW_JERSEY: 'newjersey',
+  });
+
   const changeLegendColor = (type) => {
     setIncomeLegend(type);
   };
@@ -280,32 +280,13 @@ export default function App() {
     loadData_Minority_NJ();
   }, []);
 
-  // useEffect(() => {
-  //   if (currentMap === 'louisiana') {
-
-  //     fetch('/LADistricts.json')
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setGeojsonData1(data);
-  //         console.log('Louisiana GeoJSON loaded:', data);
-  //       })
-  //       .catch((error) => console.error('Error loading GeoJSON 1:', error));
-
-  //   }
-  // }, [currentMap]);
-
-
   const handleDistrictsClick = () => {
     if (selectedState === 'Louisiana') {
       setShowDistrictsLA(true);
-      
-
       setShowDistrictsNJ(false);
       setShowPrecinctsLA(false);
     } else if (selectedState === 'New Jersey') {
       setShowDistrictsNJ(true);
-
-
       setShowDistrictsLA(false);
       setShowPrecinctsNJ(false);
     }
@@ -331,11 +312,11 @@ export default function App() {
     }
   };
 
-
   const fetchLAPrecinctsData = async() => {
     try {
-      const response = await axios.get('http://localhost:8080/Data/la/_gen_2022_prec/geojson');
+      const response = await axios.get('http://localhost:8080/precinct-boundary/Louisiana');
       setPrecinctsDataLA(response.data);
+      console.log(response.data);
       setPrecinctsDataNJ(null);
     } catch (error) {
       console.error('Error fetching GeoJSON:', error);
@@ -362,15 +343,13 @@ const handlePrecinctsClickNJ = () => {
   
   const fetchNJPrecinctsData = async() => {
     try {
-      const response = await axios.get('http://localhost:8080/Data/NJ/Precincts2/geojson');
+      const response = await axios.get('http://localhost:8080/precinct-boundary/New Jersey');
       setPrecinctsDataNJ(response.data);
       setPrecinctsDataLA(null);
     } catch (error) {
       console.error('Error fetching GeoJSON:', error);
     }
   };
-
-
 
   const getFeatureStyle = (feature) => {
     const party = feature.properties.party;
@@ -536,15 +515,12 @@ const handlePrecinctsClickNJ = () => {
   };
 
   const getPrecinctStyle = (feature) => {
-    let precinctname = feature.properties.Parish + " " + feature.properties.Precinct;
+    let precinctname = feature.properties.PRECINCT;
     let name = " ";
     
-    // console.log(precinctname)
     allVoteData.forEach(data => {
       // console.log(`Precinct: ${data.precinct}, Biden Votes: ${data.bidenVote}, Trump Votes: ${data.trumpVote}`);
-      
-      if(precinctname === data.precinct){
-        if(data.bidenVote > data.trumpVote)
+        if(feature.properties.G20PREDBID > feature.properties.G20PRERTRU)
         {
           name = "Biden";
         }
@@ -553,13 +529,8 @@ const handlePrecinctsClickNJ = () => {
           name = "Trump"
         }
         return; 
-      }
+      
     });
-
-    // console.log(allVoteData)
-
-    // console.log(name)
-
     return {
       fillColor: name === 'Trump' ? 'red' : name === 'Biden' ? 'blue' : '#ffffff',
       color: '#000000',
@@ -570,7 +541,7 @@ const handlePrecinctsClickNJ = () => {
   }
 
   const getPrecinctStyle2 = (feature) => {
-    let precinctname = feature.properties.MUN_NAME + " " + feature.properties.WARD_CODE + " " + feature.properties.ELECD_CODE;
+    let precinctname = feature.properties.PRECINCT;
     let name = " ";
 
     // console.log(precinctname)
@@ -614,9 +585,6 @@ const handlePrecinctsClickNJ = () => {
     fillOpacity: 0,
   });
 
-
-
-  
   const onEachFeature = (feature, layer) => {
     layer.on({
       mouseover: () => {
@@ -658,11 +626,8 @@ const handlePrecinctsClickNJ = () => {
         }
       },
     });
-  
-    // Tooltip bindings remain the same
 
   };
-  
 
 const onEachStateFeature = (feature, layer) => {
   const handleClick = () => {
@@ -696,7 +661,6 @@ const onEachStateFeature = (feature, layer) => {
 };
 
 const resetStateClickHandlers = () => {
-
   if (mapRef.current) {
     mapRef.current.eachLayer((layer) => {
 
@@ -714,8 +678,8 @@ const onEachPrecinctFeature = (feature, layer) => {
           if(feature.properties.MUN_NAME){
             setFakeCurrArea(feature.properties.MUN_NAME + " " + feature.properties.WARD_CODE + " " + feature.properties.ELECD_CODE);
           }
-          else if(feature.properties.Precinct){
-            setFakeCurrArea(feature.properties.Parish + " " + feature.properties.Precinct);
+          else if(feature.properties.PRECINCT){
+            setFakeCurrArea(feature.properties.PRECINCT);
           }
       },
       mouseout: () => {
@@ -727,8 +691,8 @@ const onEachPrecinctFeature = (feature, layer) => {
         if(feature.properties.MUN_NAME){
           setCurrArea(feature.properties.MUN_NAME + " " + feature.properties.WARD_CODE + " " + feature.properties.ELECD_CODE);
         } 
-        else if(feature.properties.Precinct){
-          setCurrArea(feature.properties.Parish + " " + feature.properties.Precinct);
+        else if(feature.properties.PRECINCT){
+          setCurrArea(feature.properties.PRECINCT);
         }
       },
   });
@@ -743,7 +707,6 @@ const onEachPrecinctFeature = (feature, layer) => {
   
   const LAFeature = getLAFeature(statesData);
   
-
   const LAStyle = {
     fillColor:'#FF0000',
     color: '#ffffff',
@@ -760,7 +723,6 @@ const onEachPrecinctFeature = (feature, layer) => {
   
   const newJerseyFeature = getNewJerseyFeature(statesData);
   
-
   const newJerseyStyle = {
     fillColor:'#0000ff',
     color: '#ffffff',
@@ -778,19 +740,28 @@ const onEachPrecinctFeature = (feature, layer) => {
     }
   };
   
-  const handleSelection = (selection) => {
-    if (selection === 'louisiana') {
-      const fetch_LA_Districts_GeoJson = async () => {
-        try {
-          const response = await axios.get('http://localhost:8080/Data/LA/Districts/json');
-          setGeojsonData1(response.data);
-        } catch (error) {
-          console.error('Error fetching GeoJSON:', error);
-        }
-      };
+  const fetch_NJ_Districts_GeoJson = async () => {
+    try {
+        const response = await axios.get('http://localhost:8080/Data/NJ/Districts/geojson');
+      setGeojsonData2(response.data);
+    } catch (error) {
+        console.error('Error fetching GeoJSON:', error);
+    }
+  };
 
+  const fetch_LA_Districts_GeoJson = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/district-boundary/Louisiana');
+      setGeojsonData1(response.data);
+    } catch (error) {
+      console.error('Error fetching GeoJSON:', error);
+    }
+  };
+
+  const handleSelection = (selection) => {
+    if (selection === StateEnum.LOUISIANA) {
       fetch_LA_Districts_GeoJson();
-      setCurrentMap('louisiana');
+      setCurrentMap(StateEnum.LOUISIANA);
       setSelectedState("Louisiana");
       setCurrArea("Louisiana")
       centerMap(centerLouisiana, zoomLevels.louisiana);
@@ -799,30 +770,15 @@ const onEachPrecinctFeature = (feature, layer) => {
       setShowWelcome(false);
       setIsTabVisible(true);
       setMinimizeSidebar(true);
-
       setLegendVisible(true);
-
       setShowPrecinctsLA(false);
       setShowPrecinctsNJ(false);
       setIsPrecinctsActive(false);
       setShowDistrictsLA(true);
 
-    } else if (selection === 'newjersey') {
-
-    //CLIENT SERVER PRESENTATION
-    const fetch_NJ_Districts_GeoJson = async () => {
-      try {
-          const response = await axios.get('http://localhost:8080/Data/NJ/Districts/geojson');    //**AXIOS REQUEST**
-          setGeojsonData2(response.data);
-      } catch (error) {
-          console.error('Error fetching GeoJSON:', error);
-      }
-    };
-    
-
-
+    } else if (selection === StateEnum.NEW_JERSEY) {
       fetch_NJ_Districts_GeoJson();
-      setCurrentMap('newjersey');
+      setCurrentMap(StateEnum.NEW_JERSEY);
       setSelectedState("New Jersey");
       setCurrArea("New Jersey")
       centerMap(centerNewJersey, zoomLevels.newjersey);
@@ -831,14 +787,11 @@ const onEachPrecinctFeature = (feature, layer) => {
       setShowWelcome(false);
       setIsTabVisible(true);
       setMinimizeSidebar(true);
-
       setLegendVisible(true);
-
       setShowPrecinctsLA(false);
       setShowPrecinctsNJ(false);
       setIsPrecinctsActive(false);
       setShowDistrictsNJ(true);
-
     } else {
       setCurrentMap('home');
       setSelectedState('');
@@ -960,7 +913,6 @@ const onEachPrecinctFeature = (feature, layer) => {
         currState={selectedState}
         handleArrowClick={handleArrowClick}
         />
-
       )}
       
       <Tab 
@@ -987,7 +939,6 @@ const onEachPrecinctFeature = (feature, layer) => {
             </div>
           )}
         <MapContainer
-          /*key={`${showDistrictsLA}-${showDistrictsNJ}`}*/
           ref={mapRef}
           center={centerDefault}
           zoom={defaultZoom}
@@ -1005,22 +956,11 @@ const onEachPrecinctFeature = (feature, layer) => {
               isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_LA : null} onEachFeature={onEachFeature} />
           )}
 
-
-
-
-
           {showDistrictsNJ && geojsonData2 && (
             <GeoJSON data={geojsonData2} style={isIncomeLegend === "income" ? getDistrictNJStyleIncome :
               isIncomeLegend === "voting" ? getFeatureStyle :
               isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_NJ : null} onEachFeature={onEachFeature} />
-          
-              //CLIENT-SERVER PRESENTATION
           )}
-
-
-
-
-
 
           {showPrecinctsLA && precinctsDataLA && (
           <GeoJSON data={precinctsDataLA} style={getPrecinctStyle} onEachFeature={onEachPrecinctFeature} />
