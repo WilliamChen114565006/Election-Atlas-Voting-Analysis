@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
 import '../styles/App.css';
 
-const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onDistrictsClick, fakecurrArea, changeLegendColor2}) => {
+const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onDistrictsClick, fakecurrArea, changeLegendColor2, changeRaceOption}) => {
   // State to track the active legend buttons
   const [activeLegendButton, setActiveLegendButton] = useState('votingbutton'); // Set initial highlight for Voting
   // State to track the active precinct or district button
   const [activePrecinctDistrict, setActivePrecinctDistrict] = useState('district'); // Set initial highlight for Districts
+  const [selectedRaceOption, setSelectedRaceOption] = useState(''); // Track the selected race option
+
 
   const handleLegendButtonClick = (buttonId) => {
     setActiveLegendButton(buttonId);
     // Call the respective function based on the button clicked
-    if (buttonId === 'votingbutton') changeLegendColor2("voting");
-    else if (buttonId === 'racebutton') changeLegendColor2("race");
-    else if (buttonId === 'incomebutton') changeLegendColor2("income");
+    if (buttonId === 'votingbutton'){
+      changeLegendColor2("voting");
+      setSelectedRaceOption("");
+    }
+    else if (buttonId === 'incomebutton'){
+      changeLegendColor2("income");
+      setSelectedRaceOption("");
+    } 
+  };
+
+  const handleRaceOptionChange = (event) => {
+    const selectedOption = event.target.value;
+    setSelectedRaceOption(selectedOption);
+    changeRaceOption(selectedOption);
+    changeLegendColor2("race"); // Pass the selected race option to changeLegendColor2
   };
 
   const handlePrecinctDistrictClick = (type) => {
@@ -35,13 +49,23 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
         >
           Voting
         </button>
-        <button 
-          id="racebutton" 
-          className={activeLegendButton === 'racebutton' ? 'active' : ''} 
-          onClick={() => handleLegendButtonClick('racebutton')}
+
+        <select
+          id="raceDropdown"
+          value={selectedRaceOption}
+          onChange={handleRaceOptionChange}
+          className="race-dropdown"
         >
-          Race
-        </button>
+          <option value="" disabled>Select Race</option>
+          <option value="white">White</option>
+          <option value="black">Black</option>
+          <option value="asian">Asian</option>
+          <option value="native">Native</option>
+          <option value="pacific">Pacific</option>
+          <option value="other">Other</option>
+        </select>
+
+
         <button 
           id="incomebutton" 
           className={activeLegendButton === 'incomebutton' ? 'active' : ''} 

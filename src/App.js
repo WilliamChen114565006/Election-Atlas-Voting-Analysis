@@ -52,7 +52,9 @@ export default function App() {
   const [isAllIncomeData2, setisAllIncomeData2] = useState([]);
   const [minorityDensityDataNJ, setMinorityDensityDataNJ] = useState([]);
   const [colors, setColors] = useState(null);
-  const [race, setRace] = useState("White");
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [race, setRace] = useState("white");
+
 
   const StateEnum = Object.freeze({
     LOUISIANA: 'louisiana',
@@ -119,6 +121,18 @@ const fetchNJPrecinctsData = async() => {
   }
 };
 //------------------------------------------------------------
+
+const handleSelectedDistrict = (district) => {
+  if(district === null)
+  {
+    setSelectedDistrict(null);
+  }
+  else
+  {
+    setSelectedDistrict(district);
+  }
+}
+
   const mapRef = useRef();
 
   const loadDataLAIncome = () => {
@@ -341,10 +355,12 @@ const fetchNJPrecinctsData = async() => {
       setShowDistrictsLA(true);
       setShowDistrictsNJ(false);
       setShowPrecinctsLA(false);
+      setSelectedDistrict(null);
     } else if (selectedState === 'New Jersey') {
       setShowDistrictsNJ(true);
       setShowDistrictsLA(false);
       setShowPrecinctsNJ(false);
+      setSelectedDistrict(null);
     }
   };
 
@@ -549,6 +565,26 @@ const handlePrecinctsClickNJ = () => {
       fillOpacity: highlightedFeature === feature ? 0.7 : 0.5,
     };
   };
+
+  const getDistrictStyle = (feature) => {
+    const isSelected = feature.properties.name === selectedDistrict;
+    const party = feature.properties.party;
+  
+    const fillColor = party === 'Republican'
+      ? 'red'
+      : party === 'Democrat'
+      ? 'blue'
+      : '#cccccc';
+  
+    return {
+      fillColor: fillColor,
+      color: isSelected ? 'yellow' : '#000000',
+      weight: isSelected ? 5 : 0.4,
+      opacity: 1,
+      fillOpacity: isSelected ? 0.6 : 0.2,
+    };
+  };
+  
 
 //RACE PRECINCT STYLE (BLACK)
 const getPrecinctBlackStyle = (feature) => {
@@ -828,6 +864,7 @@ const onEachPrecinctFeature = (feature, layer) => {
       setShowPrecinctsNJ(false);
       setIsPrecinctsActive(false);
       setShowDistrictsLA(true);
+      setSelectedDistrict(null);
 
     } else if (selection === StateEnum.NEW_JERSEY) {
       fetch_NJ_Districts_GeoJson();
@@ -845,6 +882,7 @@ const onEachPrecinctFeature = (feature, layer) => {
       setShowPrecinctsNJ(false);
       setIsPrecinctsActive(false);
       setShowDistrictsNJ(true);
+      setSelectedDistrict(null);
     } else {
       setCurrentMap('home');
       setSelectedState('');
@@ -863,6 +901,7 @@ const onEachPrecinctFeature = (feature, layer) => {
       setShowDistrictsLA(false);
       setShowDistrictsNJ(false);
       resetStateClickHandlers();
+      setSelectedDistrict(null);
     }
   };
 
@@ -960,13 +999,16 @@ const onEachPrecinctFeature = (feature, layer) => {
         </div>
       </div>
 
-      {isInfoVisible && (
-        <InfoPanel stateName={selectedState}
-        currArea={currArea}
-        currState={selectedState}
-        handleArrowClick={handleArrowClick}
-        />
-      )}
+    {isInfoVisible && (
+      <InfoPanel 
+      stateName={selectedState}
+      currArea={currArea}
+      currState={selectedState}
+      handleArrowClick={handleArrowClick}
+      handleSelectedDistrict = {handleSelectedDistrict}
+    />
+  )}
+
       
       <Tab 
         isVisible={isTabVisible} 
@@ -1006,15 +1048,25 @@ const onEachPrecinctFeature = (feature, layer) => {
 
           {showDistrictsLA && geojsonDataLA && (
             <GeoJSON data={geojsonDataLA} style={isIncomeLegend === "income" ? getDistrictLAStyleIncome :
+              selectedDistrict !== null ? getDistrictStyle :
               isIncomeLegend === "voting" ? getFeatureStyle :
-              isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_LA : null} onEachFeature={onEachFeature} />
+              isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_LA : getFeatureStyle} onEachFeature={onEachFeature} />
           )}
 
           {showDistrictsNJ && geojsonDataNJ && (
             <GeoJSON data={geojsonDataNJ} style={isIncomeLegend === "income" ? getDistrictNJStyleIncome :
+              selectedDistrict !== null ? getDistrictStyle :
               isIncomeLegend === "voting" ? getFeatureStyle :
-              isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_NJ : null} onEachFeature={onEachFeature} />
+              isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_NJ : getFeatureStyle} onEachFeature={onEachFeature} />
           )}
+
+          {/* {showDistrictsLA && geojsonData1 && (
+            <GeoJSON data={geojsonData1} style={getDistrictStyle} onEachFeature={onEachFeature} />
+          )}
+
+          {showDistrictsNJ && geojsonData2 && (
+            <GeoJSON data={geojsonData2} style={getDistrictStyle} onEachFeature={onEachFeature} />
+          )} */}
 
           {showPrecinctsLA && precinctsDataLA && (
           <GeoJSON data={precinctsDataLA} style={isIncomeLegend === "voting" ? getPrecinctStyle: 

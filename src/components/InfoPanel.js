@@ -9,7 +9,7 @@ import CongressionalTable from './CongressionalTable';
 import BoxWhiskerPlot from './BoxWhiskerPlot';
 import '../styles/Tabs.css';
 
-export default function InfoPanel({ stateName, currArea, handleArrowClick, currState }) {
+export default function InfoPanel({ stateName, currArea, handleArrowClick, currState, handleSelectedDistrict }) {
   const [activeTab, setActiveTab] = useState(0);
   const [isPointLeft, setPointLeft] = useState(true);
   const [isMinimized, setMinimizeInfoPanel] = useState(false);
@@ -125,7 +125,9 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               {activeTab === 3 && 
                 <div className='tab-box'>
                     <CongressionalTable 
-                      stateName={stateName}/>
+                      stateName={stateName}
+                      handleSelectedDistrict = {handleSelectedDistrict}
+                    />
                 </div>
               }
             </Box>
