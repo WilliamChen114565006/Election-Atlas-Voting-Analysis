@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function CongressionalTable({ stateName }) {
+export default function CongressionalTable({ stateName, handleSelectedDistrict }) {
   const [tableData, setTableData] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const fetchCongressionalTableData = async () => {
     try {
@@ -23,9 +24,24 @@ export default function CongressionalTable({ stateName }) {
     fetchCongressionalTableData();
   }, [stateName]);
 
+  const handleRowClick = (index, district) => {
+    setSelectedRow(index);
+    handleSelectedDistrict("District " + (++index));
+  };
+
+  const handleClearSelection = () => {
+    setSelectedRow(null);
+    handleSelectedDistrict(null);
+  };
+
   return (
     <div className="congressional-table-container">
-      <h2>State Congressional Representation</h2>
+      <div className="table-header">
+        <h2>Congressional Table</h2>
+        <button className="clear-button" onClick={handleClearSelection}>
+          Clear Selection
+        </button>
+      </div>
       <table className="congressional-table">
         <thead>
           <tr>
@@ -44,7 +60,18 @@ export default function CongressionalTable({ stateName }) {
         </thead>
         <tbody>
           {tableData.map((district, index) => (
-            <tr key={index}>
+            <tr
+              key={index}
+              className={
+                selectedRow === index
+                  ? district.winning_party === 'democrat'
+                    ? 'selected-row-democrat'
+                    : 'selected-row-republican'
+                  : ''
+              }
+              onClick={() => handleRowClick(index, district)}
+              style={{ cursor: 'pointer' }}
+            >
               <td>{district.DISTRICTNUM}</td>
               <td>{district.Representative}</td>
               <td>{district.winning_party}</td>
