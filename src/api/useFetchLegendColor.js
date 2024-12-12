@@ -7,14 +7,12 @@ const fetcher = async (url) => {
 };
 
 export default function useFetchLegendColor(legendColor) {
-  const { data: colors, error, isLoading } = useSWR(
+  const { data: colors} = useSWR(
     legendColor ? `http://localhost:8080/Data/colors/${legendColor}` : null, 
     fetcher
   );
 
   return {
-    colors,
-    loading: isLoading,
-    error,
+    colors
   };
 }
