@@ -52,11 +52,17 @@ export default function App() {
   const [isAllIncomeData2, setisAllIncomeData2] = useState([]);
   const [minorityDensityDataNJ, setMinorityDensityDataNJ] = useState([]);
   const [colors, setColors] = useState(null);
+  const [race, setRace] = useState("White");
 
   const StateEnum = Object.freeze({
     LOUISIANA: 'louisiana',
     NEW_JERSEY: 'newjersey',
   });
+
+
+  const changeRaceOption = (type) =>{
+    setRace(type);
+  }
 
   //FETCHING COLORS-----------------------------
   const {colors: fetchedColors} = useFetchLegendColor(isIncomeLegend);
@@ -467,23 +473,23 @@ const handlePrecinctsClickNJ = () => {
     minorityDensityDataLA.forEach(data => {
     if (districtName === data.district) {
       if (data.minorityPercent > 91) {
-        color = "91%-100%";
+        color = "90%-100%";
       } else if (data.minorityPercent > 81) {
-        color = "81%-90%";
+        color = "80%-90%";
       } else if (data.minorityPercent > 71) {
-        color = "71%-80%";
+        color = "70%-80%";
       } else if (data.minorityPercent > 61) {
-        color = "61%-70%";
+        color = "60%-70%";
       } else if (data.minorityPercent > 51) {
-        color = "51%-60%";
+        color = "50%-60%";
       } else if (data.minorityPercent > 41) {
-        color = "41%-50%";
+        color = "40%-50%";
       } else if (data.minorityPercent > 31) {
-        color = "31%-40%";
+        color = "30%-40%";
       } else if (data.minorityPercent > 21) {
-        color = "21%-30%";
+        color = "20%-30%";
       } else if (data.minorityPercent > 11) {
-        color = "11%-20%";
+        color = "10%-20%";
       } else {
         color = "0%-10%";
       }
@@ -509,23 +515,23 @@ const handlePrecinctsClickNJ = () => {
     minorityDensityDataNJ.forEach(data => {
       if (districtName === data.district) {
         if (data.minorityPercent > 91) {
-          color = "91%-100%";
+          color = "90%-100%";
         } else if (data.minorityPercent > 81) {
-          color = "81%-90%";
+          color = "80%-90%";
         } else if (data.minorityPercent > 71) {
-          color = "71%-80%";
+          color = "70%-80%";
         } else if (data.minorityPercent > 61) {
-          color = "61%-70%";
+          color = "60%-70%";
         } else if (data.minorityPercent > 51) {
-          color = "51%-60%";
+          color = "50%-60%";
         } else if (data.minorityPercent > 41) {
-          color = "41%-50%";
+          color = "40%-50%";
         } else if (data.minorityPercent > 31) {
-          color = "31%-40%";
+          color = "30%-40%";
         } else if (data.minorityPercent > 21) {
-          color = "21%-30%";
+          color = "20%-30%";
         } else if (data.minorityPercent > 11) {
-          color = "11%-20%";
+          color = "10%-20%";
         } else {
           color = "0%-10%";
         }
@@ -546,29 +552,30 @@ const handlePrecinctsClickNJ = () => {
 
 //RACE PRECINCT STYLE (BLACK)
 const getPrecinctBlackStyle = (feature) => {
-   //loop through PrecinctsDataNJ features and take BLACK_POP field and then divide it by TOT_POP field to get percent and then match color to percent
-  const { BLACK_POP, TOT_POP } = feature.properties;
-  const blackPercent = (BLACK_POP / TOT_POP) * 100;
+  let raceOption= race.toUpperCase()+"_POP";
+  const { TOT_POP } = feature.properties;
+  const racePopulation = feature.properties[raceOption]; 
+  const blackPercent = (racePopulation / TOT_POP) * 100;
 
   let color = "";
   if (blackPercent > 91) {
-      color = "91%-100%";
+      color = "90%-100%";
   } else if (blackPercent > 81) {
-      color = "81%-90%";
+      color = "80%-90%";
   } else if (blackPercent > 71) {
-      color = "71%-80%";
+      color = "70%-80%";
   } else if (blackPercent > 61) {
-      color = "61%-70%";
+      color = "60%-70%";
   } else if (blackPercent > 51) {
-      color = "51%-60%";
+      color = "50%-60%";
   } else if (blackPercent > 41) {
-      color = "41%-50%";
+      color = "40%-50%";
   } else if (blackPercent > 31) {
-      color = "31%-40%";
+      color = "30%-40%";
   } else if (blackPercent > 21) {
-      color = "21%-30%";
+      color = "20%-30%";
   } else if (blackPercent > 11) {
-      color = "11%-20%";
+      color = "10%-20%";
   } else {
       color = "0%-10%";
   }
@@ -587,6 +594,7 @@ const getPrecinctBlackStyle = (feature) => {
 //VOTING PRECINCT STYLE
   const getPrecinctStyle = (feature) => {
     let partyColor;
+    let hueColor;
     // console.log(`Precinct: ${data.precinct}, Biden Votes: ${data.bidenVote}, Trump Votes: ${data.trumpVote}`);
     if(feature.properties.G20PREDBID > feature.properties.G20PRERTRU)
     {
@@ -968,6 +976,7 @@ const onEachPrecinctFeature = (feature, layer) => {
         onDistrictsClick={handleDistrictsClick}
         fakecurrArea={fakecurrArea}
         changeLegendColor2={changeLegendColor}
+        changeRaceOption={changeRaceOption}
       />
 
       <Legend isVisible={isLegendVisible}
