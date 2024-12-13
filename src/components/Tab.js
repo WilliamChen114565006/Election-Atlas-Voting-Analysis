@@ -14,19 +14,21 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
     // Call the respective function based on the button clicked
     if (buttonId === 'votingbutton'){
       changeLegendColor2("voting");
-      setSelectedRaceOption("");
     }
     else if (buttonId === 'incomebutton'){
       changeLegendColor2("income");
-      setSelectedRaceOption("");
     } 
+    else if (buttonId === "regionbutton"){
+      changeLegendColor2("region");
+    }
+    setSelectedRaceOption("");
   };
 
   const handleRaceOptionChange = (event) => {
     const selectedOption = event.target.value;
     setSelectedRaceOption(selectedOption);
     changeRaceOption(selectedOption);
-    changeLegendColor2("race"); // Pass the selected race option to changeLegendColor2
+    changeLegendColor2("race");
   };
 
   const handlePrecinctDistrictClick = (type) => {
@@ -65,6 +67,13 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
           <option value="other">Other</option>
         </select>
 
+        <button 
+          id="votingbutton" 
+          className={activeLegendButton === 'regionbutton' ? 'active' : ''} 
+          onClick={() => handleLegendButtonClick('regionbutton')}
+        >
+          Region
+        </button>
 
         <button 
           id="incomebutton" 
@@ -73,6 +82,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
         >
           Income
         </button>
+        
         
         {/* <div id="precinct-district-buttons"> */}
         <button 

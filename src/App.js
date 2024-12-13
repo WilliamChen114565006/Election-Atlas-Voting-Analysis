@@ -629,25 +629,45 @@ const getPrecinctBlackStyle = (feature) => {
 
 //VOTING PRECINCT STYLE
   const getPrecinctStyle = (feature) => {
-    let partyColor;
-    let hueColor;
-    // console.log(`Precinct: ${data.precinct}, Biden Votes: ${data.bidenVote}, Trump Votes: ${data.trumpVote}`);
+    let partyColor=0;
+    let hueColor=100;
+    const { AVG_INC } = feature.properties;
     if(feature.properties.G20PREDBID > feature.properties.G20PRERTRU)
     {
-      partyColor=colors["Democrat"];
+      partyColor=240;
     }
     else
     {
-      partyColor=colors["Republican"];
+      partyColor=0;
     }
-        
-    return {
-      fillColor: partyColor || '#ffffff',
-      color: '#000000',
-      weight: 0.5,
-      opacity: 1,
-      fillOpacity: highlightedFeature === feature ? 0.7 : 0.5,
-    };
+
+    if (AVG_INC < 20000){
+      hueColor="90%";
+    }
+    else if(AVG_INC < 35000){
+      hueColor="75%";
+    }
+    else if(AVG_INC < 50000){
+      hueColor="60%";
+    }
+    else if(AVG_INC < 100000){
+      hueColor="45%";
+    }
+    else if(AVG_INC < 200000){
+      hueColor="30%";
+    }
+    else if(AVG_INC >= 200000){
+      hueColor="15%";
+    }
+
+    const adjustedColor = `hsl(${partyColor}, 100%, ${hueColor})`; 
+  return {
+    fillColor: adjustedColor || '#ffffff', // Use the adjusted color
+    color: '#000000',
+    weight: 0.5,
+    opacity: 1,
+    fillOpacity: highlightedFeature === feature ? 0.7 : 0.8,
+  };
   }
 
 //AVERAGE INCOME PRECINCT STYLE
@@ -683,6 +703,20 @@ const getPrecinctIncomeStyle = (feature) => {
   };
 
 }
+//REGION PRECINCT STYLE
+const getPrecinctRegionStyle = (feature) =>{
+    const { classification } = feature.properties;
+    const upperClassification= classification.charAt(0).toUpperCase() + classification.slice(1).toLowerCase();
+    const color=colors[upperClassification];
+    return {
+      fillColor: color || '#ffffff',
+      color: '#000000',
+      weight: 0.5,
+      opacity: 1,
+      fillOpacity: highlightedFeature === feature ? 0.7 : 0.8,
+    };
+}
+
 
   const defaultStateStyle = (feature) => ({
     fillColor: '#ffffff',
@@ -1071,6 +1105,7 @@ const onEachPrecinctFeature = (feature, layer) => {
           {showPrecinctsLA && precinctsDataLA && (
           <GeoJSON data={precinctsDataLA} style={isIncomeLegend === "voting" ? getPrecinctStyle: 
             isIncomeLegend === "race" ? getPrecinctBlackStyle : 
+            isIncomeLegend === "region" ? getPrecinctRegionStyle :
             isIncomeLegend === "income" ? getPrecinctIncomeStyle : null
           } 
           onEachFeature={onEachPrecinctFeature}/>
@@ -1078,6 +1113,7 @@ const onEachPrecinctFeature = (feature, layer) => {
           {showPrecinctsNJ && precinctsDataNJ && (
           <GeoJSON data={precinctsDataNJ} style={isIncomeLegend === "voting"? getPrecinctStyle:
             isIncomeLegend === "race" ? getPrecinctBlackStyle: 
+            isIncomeLegend === "region" ? getPrecinctRegionStyle :
             isIncomeLegend === "income" ? getPrecinctIncomeStyle: null
           } 
           onEachFeature={onEachPrecinctFeature} />
