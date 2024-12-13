@@ -7,16 +7,43 @@ export default function BoxWhiskerPlot({ stateName }) {
   const [layout, setLayout] = useState({});
   const [raceCategory, setRaceCategory] = useState("white_POP");
   const [raceData, setRaceData] = useState({});
+  const [selectedDisplay, setSelectedDisplay] = useState("Race");
+  const [raceGroup, setRaceGroup] = useState("White");
+  const [incomeGroup, setIncomeGroup] = useState("Low Income");
+  const [regionType, setRegionType] = useState("Rural");
+  const displayCategory = ["Race", "Income", "Region"];
+  const raceGroups = ["White", "Black", "Asian", "Native", "Pacific"];
+  const incomeGroups = ["Low Income", "Medium Income", "High Income"];
+  const regionTypes = ["Rural", "Suburban", "Urban"];
+  
+  stateName = stateName.replace(/ /g, "_");
 
   useEffect(() => {
-    fetchBoxWhiskData();
-  }, [stateName]);
+    fetchBoxWhiskData(selectedDisplay);
+  }, [stateName, raceGroup, raceCategory, incomeGroup, regionType, selectedDisplay]);
 
-  const fetchBoxWhiskData = async () => {
+  const fetchBoxWhiskData = async (displayCategory) => {
     try {
-      const response = await axios.get(`http://localhost:8080/box-and-whisker/${stateName}/race`);
-      setRaceData(response.data); 
-      updatePlot(response.data, raceCategory); 
+      const response = await axios.get(`http://localhost:8080/box-and-whisker/${stateName}/${displayCategory}`);
+      if(displayCategory == "Race"){
+        //console.log(response.data);
+        setRaceData(response.data);
+        let modifiedString = raceGroup.charAt(0).toLowerCase() + raceGroup.slice(1);
+        updatePlot(response.data, modifiedString); 
+      }
+      if(displayCategory == "Income"){
+        //console.log(response.data);
+        setRaceData(response.data);
+        let modifiedString = incomeGroup.replace(/ /g, "_");
+        modifiedString = modifiedString.charAt(0).toLowerCase() + modifiedString.slice(1);
+        updatePlot(response.data, modifiedString); 
+      }
+      if(displayCategory == "Region"){
+        //console.log(response.data);
+        setRaceData(response.data);
+        let modifiedString = regionType.charAt(0).toLowerCase() + regionType.slice(1);
+        updatePlot(response.data, modifiedString); 
+      }
     } catch (error) {
       console.error("Error fetching race data:", error);
     }
@@ -71,7 +98,7 @@ export default function BoxWhiskerPlot({ stateName }) {
         ticktext: bucketNames.map((bucket) => bucket),
       },
       yaxis: {
-        title: "Population",
+        title: "Population (%)",
       },
       showlegend: true,
       autosize: true,
@@ -80,27 +107,99 @@ export default function BoxWhiskerPlot({ stateName }) {
   };
 
   const handleRaceChange = (event) => {
-    const selectedCategory = event.target.value;
-    setRaceCategory(selectedCategory);
-    updatePlot(raceData, selectedCategory);
+    // const selectedCategory = event.target.value;
+    setRaceGroup(event.target.value);
+    //updatePlot(raceData, selectedCategory);
+  };
+
+  const handleDisplayChange = (event) => {
+    setSelectedDisplay(event.target.value);
+  };
+
+  const handleIncomeGroupChange = (event) => {
+    setIncomeGroup(event.target.value);
+  };
+
+  const handleRegionTypeChange = (event) => {
+    setRegionType(event.target.value);
   };
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <div style={{ marginBottom: "20px" }}>
-        <label htmlFor="race-select" style={{ marginRight: "10px" }}>Select Race:</label>
+        <label htmlFor="display-select" style={{ marginRight: "10px" }}>Select Display:</label>
         <select
-          id="race-select"
-          value={raceCategory}
-          onChange={handleRaceChange}
+          id="display-select"
+          value={selectedDisplay}
+          onChange={handleDisplayChange}
         >
-          {Object.keys(raceData).map((category) => (
-            <option key={category} value={category}>
-              {category.replace("_POP", "").toUpperCase()}
+          {displayCategory.map((display, index) => (
+            <option key={index} value={display}>
+              {display}
             </option>
           ))}
         </select>
-      </div>
+        
+        {selectedDisplay == "Race" && (
+          <>
+          <label htmlFor="race-select" style={{ marginRight: "10px" }}>Select Race:</label>
+          <select
+            id="race-select"
+            value={raceGroup}
+            onChange={handleRaceChange}
+          >
+            {raceGroups.map((raceGroup, index) => (
+              <option key={index} value={raceGroup}>
+                {raceGroup}
+              </option>
+            ))}
+
+            {/* {Object.keys(raceData).map((category) => (
+              <option key={category} value={category}>
+                {category.replace("_POP", "").toUpperCase()}
+              </option>
+            ))} */}
+          </select>
+          </>
+        )}
+
+        {selectedDisplay == "Income" && (
+          <>
+          <label htmlFor="income-select" style={{ marginRight: "10px" }}>Select Income Group:</label>
+          <select
+            id="income-select"
+            value={incomeGroup}
+            onChange={handleIncomeGroupChange}
+          >
+            {incomeGroups.map((incomeGroup, index) => (
+              <option key={index} value={incomeGroup}>
+                {incomeGroup}
+              </option>
+            ))}
+
+          </select>
+          </>
+        )}
+
+        {selectedDisplay == "Region" && (
+          <>
+          <label htmlFor="region-select" style={{ marginRight: "10px" }}>Select Region Type:</label>
+          <select
+            id="region-select"
+            value={regionType}
+            onChange={handleRegionTypeChange}
+          >
+            {regionTypes.map((regionType, index) => (
+              <option key={index} value={regionType}>
+                {regionType}
+              </option>
+            ))}
+
+          </select>
+          </>
+        )}
+
+        </div>
 
       <Plot
         data={plotData}

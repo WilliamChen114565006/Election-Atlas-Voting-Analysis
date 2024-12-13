@@ -7,6 +7,7 @@ import VotingChart from './VotingGraph';
 import ScatterPlot from './ScatterChart';
 import CongressionalTable from './CongressionalTable';
 import BoxWhiskerPlot from './BoxWhiskerPlot';
+import EnsembleSummaryBarGraph from './EnsembleSummaryBarGraph';
 import '../styles/Tabs.css';
 
 export default function InfoPanel({ stateName, currArea, handleArrowClick, currState, handleSelectedDistrict }) {
@@ -89,8 +90,10 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
             <Tabs value={activeTab} onChange={handleChange}>
               <Tab label="Overview" className="tabs-label"/>
               <Tab label="Precinct Voting Analysis" className="tabs-label"/>
+              <Tab label="Congressional Table" className="tabs-label"/>
               <Tab label="Ensemble Summary" className="tabs-label"/>
-              <Tab label="Congressional Representation Table" className="tabs-label"/>
+              <Tab label="Ensemble Analysis" className="tabs-label"/>
+              <Tab label="Ecological Inference" className="tabs-label"/>
             </Tabs>
             <Box sx={{ padding: 2 }}>
               {activeTab === 0 && (
@@ -117,16 +120,23 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               )}
               {activeTab === 2 && 
                 <div className='tab-box'>
-                    <BoxWhiskerPlot 
+                    <CongressionalTable 
                       stateName={stateName}
+                      handleSelectedDistrict = {handleSelectedDistrict}
                     />
                 </div>
               }
               {activeTab === 3 && 
                 <div className='tab-box'>
-                    <CongressionalTable 
+                    <EnsembleSummaryBarGraph
                       stateName={stateName}
-                      handleSelectedDistrict = {handleSelectedDistrict}
+                    />
+                </div>  
+              }
+              {activeTab === 4 && 
+                <div className='tab-box'>
+                    <BoxWhiskerPlot
+                      stateName={stateName}
                     />
                 </div>
               }
