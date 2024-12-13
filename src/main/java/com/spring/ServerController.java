@@ -184,7 +184,8 @@ public class ServerController {
     public Map<String, String> getColors(@PathVariable String category) {
         try {
             ClassPathResource resource = new ClassPathResource("colors/" + category.toLowerCase() + ".json");
-            return objectMapper.readValue(resource.getInputStream(), Map.class);
+            Map<String, String> colorObj=objectMapper.readValue(resource.getInputStream(), Map.class);
+            return colorObj;
         } catch (IOException e) {
             e.printStackTrace();
             return Map.of(); 

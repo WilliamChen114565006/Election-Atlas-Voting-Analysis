@@ -208,6 +208,48 @@ body, html {
   border-radius: 15%;
 }
 
+/* DUAL LEGENDS*/
+.legend-container-2 {
+  position: absolute;
+  bottom: 20px;
+  right: 170px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-family: Arial, sans-serif;
+}
+
+.legend-container-2 h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.legend-list-2 {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legend-list-2 li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.legend-color-2 {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 1px solid #000;
+  border-radius: 3px; /* Slightly rounded corners */
+}
+
+/*----------------- */
+
 .slide-in {
   top: 0px; 
   padding: 0;
