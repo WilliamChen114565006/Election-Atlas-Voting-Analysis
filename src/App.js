@@ -80,8 +80,8 @@ export default function App() {
 //GEOJSON API CALLS-----------------------------------------
 const fetch_NJ_Districts_GeoJson = async () => {
   try {
-      const response = await axios.get('http://localhost:8080/Data/NJ/Districts/geojson');
-    setGeojsonDataNJ(response.data);
+      const response = await axios.get('http://localhost:8080/district-boundary/New Jersey');
+      setGeojsonDataNJ(response.data);
   } catch (error) {
       console.error('Error fetching GeoJSON:', error);
   }

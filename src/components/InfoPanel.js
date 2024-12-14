@@ -74,7 +74,7 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Political Lean: </span>
               <span>{getPoliticalLean()}</span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Median Household Income: </span>
-              <span>{stateData?.averageHouseholdIncomeDistribution?.toLocaleString() || ""}</span>
+              <span>{stateData?.winning_party?.toLocaleString() || ""}</span>
             </div>
             <div style={{fontSize: "20px"}}>
               <span style={{ fontWeight: 'bold' }}>State Population: </span>
