@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/App.css';
 
-const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onDistrictsClick, fakecurrArea, changeLegendColor2, changeRaceOption }) => {
+const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onDistrictsClick, fakecurrArea, changeLegendColor2, changeRaceOption, reset, setReset }) => {
   const [activeLegendButton, setActiveLegendButton] = useState(''); // Initial highlight for Voting
   const [activePrecinctDistrict, setActivePrecinctDistrict] = useState('district'); // Initial highlight for Districts
   const [selectedRaceOption, setSelectedRaceOption] = useState(''); // Track selected race option
 
   const isDistrictActive = activePrecinctDistrict === 'district';
+
+  const checkReset =()=>{
+    if (reset === true){
+      setActiveLegendButton("");
+      setSelectedRaceOption("");
+      setActivePrecinctDistrict("district");
+      changeLegendColor2("district");
+      setReset(false);
+    }
+  }
+
+  useEffect(() => {
+    checkReset();
+  }, [reset]);
 
   const handleLegendButtonClick = (buttonId) => {
     if (isDistrictActive) return; // Prevent interaction if District is active
@@ -43,6 +57,24 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
   return (
     <div className={`tab ${isVisible ? 'slide-in' : 'slide-out'}`}>
       <div className="columnizebutton">
+      <button
+          id="districtbutton"
+          className={activePrecinctDistrict === 'district' ? 'active' : ''}
+          onClick={() => handlePrecinctDistrictClick('district')}
+        >
+          Districts
+        </button>
+
+        {(stateName === "Louisiana" || stateName === "New Jersey") && (
+          <button
+            id="precinctbutton"
+            className={activePrecinctDistrict === 'precinct' ? 'active' : ''}
+            onClick={() => handlePrecinctDistrictClick('precinct')}
+          >
+            Precincts
+          </button>
+        )}
+
         <button
           id="votingbutton"
           className={`${activeLegendButton === 'votingbutton' ? 'active' : ''} ${isDistrictActive ? 'disabled' : ''}`}
@@ -85,24 +117,6 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
         >
           Income
         </button>
-
-        <button
-          id="districtbutton"
-          className={activePrecinctDistrict === 'district' ? 'active' : ''}
-          onClick={() => handlePrecinctDistrictClick('district')}
-        >
-          Districts
-        </button>
-
-        {(stateName === "Louisiana" || stateName === "New Jersey") && (
-          <button
-            id="precinctbutton"
-            className={activePrecinctDistrict === 'precinct' ? 'active' : ''}
-            onClick={() => handlePrecinctDistrictClick('precinct')}
-          >
-            Precincts
-          </button>
-        )}
       </div>
 
       <div id="fakecurrArea">

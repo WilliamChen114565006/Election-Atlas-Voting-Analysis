@@ -55,16 +55,12 @@ export default function App() {
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [race, setRace] = useState("white");
 
+  const[reset, setReset] = useState("false");
 
   const StateEnum = Object.freeze({
     LOUISIANA: 'louisiana',
     NEW_JERSEY: 'newjersey',
   });
-
-
-  const changeRaceOption = (type) =>{
-    setRace(type);
-  }
 
   //FETCHING COLORS-----------------------------
   const {colors: fetchedColors} = useFetchLegendColor(isIncomeLegend);
@@ -405,7 +401,6 @@ const handlePrecinctsClickNJ = () => {
 //DISTRICT VOTING COLORS
   const getFeatureStyle = (feature) => {
     const party = feature.properties.party;
-
     const partyColor = colors[party] || '#ffffff';
     return {
       fillColor: partyColor,
@@ -886,7 +881,10 @@ const onEachPrecinctFeature = (feature, layer) => {
       fetch_LA_Districts_GeoJson();
       setCurrentMap(StateEnum.LOUISIANA);
       setSelectedState("Louisiana");
-      setCurrArea("Louisiana")
+      setCurrArea("Louisiana");
+
+      setReset(true);
+
       centerMap(centerLouisiana, zoomLevels.louisiana);
       setShowTileLayer(true);
       setIsInfoVisible(true);
@@ -904,7 +902,10 @@ const onEachPrecinctFeature = (feature, layer) => {
       fetch_NJ_Districts_GeoJson();
       setCurrentMap(StateEnum.NEW_JERSEY);
       setSelectedState("New Jersey");
-      setCurrArea("New Jersey")
+      setCurrArea("New Jersey");
+
+      setReset(true);
+
       centerMap(centerNewJersey, zoomLevels.newjersey);
       setShowTileLayer(true);
       setIsInfoVisible(true);
@@ -1043,7 +1044,6 @@ const onEachPrecinctFeature = (feature, layer) => {
     />
   )}
 
-      
       <Tab 
         isVisible={isTabVisible} 
         stateName={selectedState} 
@@ -1052,7 +1052,9 @@ const onEachPrecinctFeature = (feature, layer) => {
         onDistrictsClick={handleDistrictsClick}
         fakecurrArea={fakecurrArea}
         changeLegendColor2={changeLegendColor}
-        changeRaceOption={changeRaceOption}
+        changeRaceOption={setRace}
+        reset={reset}
+        setReset={setReset}
       />
 
       <Legend isVisible={isLegendVisible}
@@ -1083,14 +1085,14 @@ const onEachPrecinctFeature = (feature, layer) => {
           {showDistrictsLA && geojsonDataLA && (
             <GeoJSON data={geojsonDataLA} style={isIncomeLegend === "income" ? getDistrictLAStyleIncome :
               selectedDistrict !== null ? getDistrictStyle :
-              isIncomeLegend === "voting" ? getFeatureStyle :
+              isIncomeLegend === "district" ? getFeatureStyle :
               isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_LA : getFeatureStyle} onEachFeature={onEachFeature} />
           )}
 
           {showDistrictsNJ && geojsonDataNJ && (
             <GeoJSON data={geojsonDataNJ} style={isIncomeLegend === "income" ? getDistrictNJStyleIncome :
               selectedDistrict !== null ? getDistrictStyle :
-              isIncomeLegend === "voting" ? getFeatureStyle :
+              isIncomeLegend === "district" ? getFeatureStyle :
               isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_NJ : getFeatureStyle} onEachFeature={onEachFeature} />
           )}
 
