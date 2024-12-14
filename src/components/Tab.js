@@ -28,6 +28,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
     if (buttonId === 'votingbutton') changeLegendColor2("voting");
     else if (buttonId === 'incomebutton') changeLegendColor2("income");
     else if (buttonId === "regionbutton") changeLegendColor2("region");
+    else if (buttonId === "povertybutton") changeLegendColor2("voting");
     setSelectedRaceOption("");
   };
 
@@ -37,6 +38,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
     setSelectedRaceOption(selectedOption);
     changeRaceOption(selectedOption);
     changeLegendColor2("race");
+    setActiveLegendButton("");
   };
 
   const handlePrecinctDistrictClick = (type) => {
@@ -91,7 +93,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
           className={`race-dropdown ${isDistrictActive ? 'disabled' : ''}`}
           disabled={isDistrictActive}
         >
-          <option value="" disabled>Select Race</option>
+          <option value="" disabled>Race</option>
           <option value="white">White</option>
           <option value="black">Black</option>
           <option value="asian">Asian</option>
@@ -117,6 +119,15 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
         >
           Income
         </button>
+        <button
+          id="povertybutton"
+          className={`${activeLegendButton === 'povertybutton' ? 'active' : ''} ${isDistrictActive ? 'disabled' : ''}`}
+          onClick={() => handleLegendButtonClick('povertybutton')}
+          disabled={isDistrictActive}
+        >
+          Poverty
+        </button>
+
       </div>
 
       <div id="fakecurrArea">

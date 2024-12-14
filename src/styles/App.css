@@ -91,6 +91,19 @@ body, html {
   background-color: white;
   border-radius: 5px ;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-right: 5px;
+  padding-right: 1.5%;
+  text-align: center;
+}
+
+#povertybutton{
+  font-family: "Open Sans";
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: white;
+  border-radius: 5px ;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-right: 2%;
   padding-right: 1.5%;
   text-align: center;
@@ -103,7 +116,7 @@ body, html {
   cursor: pointer;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-right: 1.5%;
+  margin-right: 5px;
 }
 
 #racebutton{
@@ -129,8 +142,8 @@ body, html {
   font-size: 15px;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding-right: 4%;
-  margin-right: 4%;
+  padding-right: 2%;
+  margin-right: 5px;
   text-align: center;
   position: relative; /* Make it relative to position the pseudo-element */
 }
@@ -145,12 +158,12 @@ body, html {
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding-right: 4%;
-  margin-right: 2%;
+  margin-right: 5px;
   text-align: center;
   position: relative; /* Make it relative to position the pseudo-element */
 }
 
-#votingbutton.active, #racebutton.active, #incomebutton.active, #regionbutton.active{
+#votingbutton.active, #racebutton.active, #incomebutton.active, #regionbutton.active, #povertybutton.active{
   background-color: green;
   color: white;
 }
@@ -278,7 +291,7 @@ body, html {
   content: '';
   position: absolute;
   top: -20;
-  right: 69%; /* Move this right margin */
+  right: 70%; /* Move this right margin */
   height: 30%;
   width: 2px; /* Same as margin-right */
   background-color: black; /* Black background for the right margin */
@@ -291,7 +304,7 @@ body, html {
   background-color: white;
   font-size: 15px;
   border-radius: 5px ;
-  margin-right: 10px;
+  margin-right: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
