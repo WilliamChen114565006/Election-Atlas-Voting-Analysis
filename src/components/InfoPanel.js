@@ -17,20 +17,22 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
   const [isMinimized, setMinimizeInfoPanel] = useState(false);
   const [stateData, setStateData] = useState(null);
 
-  useEffect(() => {
-    setMinimizeInfoPanel(false);
-    fetchStateData();
-  }, [stateName]);
-
   const fetchStateData = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/info/${stateName}`);
+      console.log(response.data)
       setStateData(response.data);
+      console.log(stateData);
     } catch (error) {
       console.error('Error fetching state data:', error);
     }
   };
 
+  useEffect(() => {
+    setMinimizeInfoPanel(false);
+    fetchStateData();
+  }, [stateName]);
+  
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
   };
@@ -40,28 +42,6 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
     setMinimizeInfoPanel((prev) => !prev);
 
     handleArrowClick(!isMinimized);
-  };
-
-  const getPoliticalLean = () => {
-    switch (currArea) {
-      case 'Louisiana':
-        return 'Republican';
-      case 'New Jersey':
-        return 'Republican';
-      default:
-        return 'Democratic'; 
-    }
-  };
-
-  const getPrecinctAmt = () => {
-    switch (currArea) {
-      case 'Louisiana':
-        return "4,864";
-      case 'New Jersey':
-        return "2,324";
-      default:
-        return "$97,126"; 
-    }
   };
 
   return (
@@ -74,23 +54,29 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               <span style={{ fontWeight: 'bold' }}>Current Area: </span>
               <span>{currArea}</span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Political Lean: </span>
-              <span>{getPoliticalLean()}</span>
-              <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Median Household Income: </span>
-              <span>{stateData?.averageHouseholdIncomeDistribution?.toLocaleString() || ""}</span>
+              <span>{stateData?.winning_party?.toLocaleString() || ""}</span>
+              <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Average Household Income ($): </span>
+              <span>{stateData?.AVG_INC?.toLocaleString() || ""}</span>
             </div>
             <div style={{fontSize: "20px"}}>
-              <span style={{ fontWeight: 'bold' }}>State Population: </span>
-              <span>{stateData?.statePopulation || ''} </span>
+              <span style={{ fontWeight: 'bold' }}>Total State Population: </span>
+              <span>{stateData?.TOT_POP?.toLocaleString() || ""} </span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Party Control: </span>
-              <span>{stateData?.partyControlRedistricting?.toLocaleString() || ""}</span>
-              <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Precinct: </span>
-              <span>{getPrecinctAmt()}</span>
+              <span>{stateData?.party_control_redistricting?.toLocaleString() || ""}</span>
+              <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Precincts: </span>
+              <span>{stateData?.total_precincts?.toLocaleString() || ""}</span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Drawing Process: </span>
-              <span style={{ cursor: "pointer", textDecoration: 'underline' }}>click here</span>
+              <a
+                href={stateData?.drawing_process?.toLocaleString() || ""}
+                target="_blank"
+                style={{ textDecoration: 'underline', cursor: 'pointer' }}
+              >
+                click here
+              </a>
             </div>
             <Tabs value={activeTab} onChange={handleChange}>
               <Tab label="Overview" className="tabs-label"/>
-              <Tab label="Precinct Voting Analysis" className="tabs-label"/>
+              <Tab label="Gingles" className="tabs-label"/>
               <Tab label="Congressional Table" className="tabs-label"/>
               <Tab label="Ecological Inference" className="tabs-label"/>
               <Tab label="Ensemble Summary" className="tabs-label"/>
