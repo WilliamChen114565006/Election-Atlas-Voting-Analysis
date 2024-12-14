@@ -26,7 +26,6 @@ com\spring\ServerController$4.class
 com\spring\config\WebConfig.class
 com\Model\PrecinctModel.class
 com\Repository\GinglesRaceDataRepository.class
-com\spring\ServerController$9.class
 com\spring\CacheHandler.class
 com\spring\ServerController$6.class
 com\Model\BoxAndWhiskerRegionModel.class

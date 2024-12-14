@@ -8,6 +8,7 @@ import ScatterPlot from './ScatterChart';
 import CongressionalTable from './CongressionalTable';
 import BoxWhiskerPlot from './BoxWhiskerPlot';
 import EnsembleSummaryBarGraph from './EnsembleSummaryBarGraph';
+import HistogramChart from './HistogramChart';
 import '../styles/Tabs.css';
 
 export default function InfoPanel({ stateName, currArea, handleArrowClick, currState, handleSelectedDistrict }) {
@@ -91,9 +92,9 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               <Tab label="Overview" className="tabs-label"/>
               <Tab label="Precinct Voting Analysis" className="tabs-label"/>
               <Tab label="Congressional Table" className="tabs-label"/>
+              <Tab label="Ecological Inference" className="tabs-label"/>
               <Tab label="Ensemble Summary" className="tabs-label"/>
               <Tab label="Ensemble Analysis" className="tabs-label"/>
-              <Tab label="Ecological Inference" className="tabs-label"/>
             </Tabs>
             <Box sx={{ padding: 2 }}>
               {activeTab === 0 && (
@@ -128,12 +129,19 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               }
               {activeTab === 3 && 
                 <div className='tab-box'>
+                    <HistogramChart
+                      stateName={stateName}
+                    />
+                </div>
+              }
+              {activeTab === 4 && 
+                <div className='tab-box'>
                     <EnsembleSummaryBarGraph
                       stateName={stateName}
                     />
                 </div>  
               }
-              {activeTab === 4 && 
+              {activeTab === 5 && 
                 <div className='tab-box'>
                     <BoxWhiskerPlot
                       stateName={stateName}

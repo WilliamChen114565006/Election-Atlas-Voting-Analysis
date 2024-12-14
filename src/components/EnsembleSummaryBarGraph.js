@@ -9,6 +9,7 @@ const EnsembleSummaryBarGraph = ({ stateName }) => {
   stateName = stateName.replace(/ /g, "_");
   const [data, setData] = useState(null);
   const [ensemble, setEnsemble] = useState("Large");
+  let numOfPlan = 0;
 
   useEffect(() => {
     fetchData(ensemble);
@@ -28,6 +29,7 @@ const EnsembleSummaryBarGraph = ({ stateName }) => {
     if (!jsonData || !jsonData.summary_data) return { labels: [], datasets: [] };
 
     const summaryData = jsonData.summary_data;
+    numOfPlan = jsonData.total_plans;
     let maxDistricts = 0;
     const splitCounts = {};
 
@@ -67,14 +69,33 @@ const EnsembleSummaryBarGraph = ({ stateName }) => {
     responsive: true,
     plugins: {
       legend: { position: "top" },
-      title: { display: true, text: `District Splits for ${ensemble.charAt(0).toUpperCase() + ensemble.slice(1)} Ensemble` },
+      title: { 
+        display: true, 
+        text: `Democratic/Republican District Splits for ${ensemble.charAt(0).toUpperCase() + ensemble.slice(1)} Ensemble (${numOfPlan} Plans)`,
+        font: {
+          size: 20, // Adjust the size as needed
+          weight: "bold", // Optional: Make the text bold
+        },
+      },
     },
     scales: {
-      x: { title: { display: true, text: "District Splits (Dem/Rep)" } },
-      y: { title: { display: true, text: "Number of Plans" } },
-    },
-  };
-
+        x: { 
+          title: { 
+            display: true, 
+            text: "District Splits (Democratic/Republican)", 
+            font: { size: 18 }, // Set the font size for the x-axis label
+          } 
+        },
+        y: { 
+          title: { 
+            display: true, 
+            text: "Number of Random District Plans", 
+            font: { size: 18 }, // Set the font size for the y-axis label
+          } 
+        },
+      },
+    };
+  
   return (
     <div>
       {/* Dropdown for ensemble selection */}

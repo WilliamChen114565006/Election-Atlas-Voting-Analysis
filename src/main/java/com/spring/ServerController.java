@@ -165,7 +165,7 @@ public class ServerController {
             return cachedData;
         }
         CongressionalTable congressTableData = congressTableRepo.findByStateIgnoreCase(state);
-        Map<String, Object> jsonCongressionalData = objectMapper.convertValue(congressTableData, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> jsonCongressionalData = congressTableData.getDistricts();
         cacheHandler.putToCache(cacheKey, jsonCongressionalData, cacheName);
         return jsonCongressionalData;
     }

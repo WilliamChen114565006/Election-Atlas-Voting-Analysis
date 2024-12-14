@@ -17,10 +17,5 @@ public class CongressionalTable {
 
     @Field("state")
     private String state;
-    private Map<String, Object> districtthree;
-    private Map<String, Object> districtsix;
-    private Map<String, Object> districtone;
-    private Map<String, Object> districtfour;
-    private Map<String, Object> districtfive;
-    private Map<String, Object> districttwo;
+    private Map<String, Object> districts;
 }

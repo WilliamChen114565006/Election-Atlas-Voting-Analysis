@@ -12,10 +12,11 @@ export default function BoxWhiskerPlot({ stateName }) {
   const [incomeGroup, setIncomeGroup] = useState("Low Income");
   const [regionType, setRegionType] = useState("Rural");
   const displayCategory = ["Race", "Income", "Region"];
-  const raceGroups = ["White", "Black", "Asian", "Native", "Pacific"];
+  const raceGroups = ["White", "Black", "Asian"];
   const incomeGroups = ["Low Income", "Medium Income", "High Income"];
   const regionTypes = ["Rural", "Suburban", "Urban"];
   
+  const stateNameWithSpace = stateName;
   stateName = stateName.replace(/ /g, "_");
 
   useEffect(() => {
@@ -29,27 +30,27 @@ export default function BoxWhiskerPlot({ stateName }) {
         //console.log(response.data);
         setRaceData(response.data);
         let modifiedString = raceGroup.charAt(0).toLowerCase() + raceGroup.slice(1);
-        updatePlot(response.data, modifiedString); 
+        updatePlot(response.data, modifiedString, stateNameWithSpace); 
       }
       if(displayCategory == "Income"){
         //console.log(response.data);
         setRaceData(response.data);
         let modifiedString = incomeGroup.replace(/ /g, "_");
         modifiedString = modifiedString.charAt(0).toLowerCase() + modifiedString.slice(1);
-        updatePlot(response.data, modifiedString); 
+        updatePlot(response.data, modifiedString, stateNameWithSpace); 
       }
       if(displayCategory == "Region"){
         //console.log(response.data);
         setRaceData(response.data);
         let modifiedString = regionType.charAt(0).toLowerCase() + regionType.slice(1);
-        updatePlot(response.data, modifiedString); 
+        updatePlot(response.data, modifiedString, stateNameWithSpace); 
       }
     } catch (error) {
       console.error("Error fetching race data:", error);
     }
   };
 
-  const updatePlot = (data, category) => {
+  const updatePlot = (data, category, stateName) => {
     const selectedRaceData = data[category];
     if (!selectedRaceData) {
       console.error("Invalid category:", category);
@@ -64,6 +65,18 @@ export default function BoxWhiskerPlot({ stateName }) {
       type: "scatter",
       marker: { color: "red", size: 8 },
       name: "Enacted Plan",
+      showlegend: true,
+    };
+
+    const recomTrace = {
+      x: [null],  // Add a dummy x value to ensure it's visible
+      y: [null],  // Add a dummy y value to ensure it's visible
+      mode: "markers",
+      type: "scatter",
+      marker: { color: "grey", size: 12, symbol: "square" },
+      name: "ReCom Ensemble", // This will appear in the legend
+      showlegend: true, // Show this trace in the legend
+      hoverinfo: "none", // Optional: Remove hover information for the recom trace
     };
 
     const bucketNames = Object.keys(selectedRaceData);
@@ -76,33 +89,58 @@ export default function BoxWhiskerPlot({ stateName }) {
           stats.median,
           stats.third_quartile,
           stats.max,
-        ],
+        ],  
         type: "box",
         name: bucket,
         boxmean: false,
         marker: { color: "lightblue" },
         line: { color: "black" }, 
+        showlegend: false,
       });
       scatterTrace.x.push(bucket);
       scatterTrace.y.push(stats.enacted);
     });
     
-    setPlotData([...boxTraces, scatterTrace]);
+    setPlotData([...boxTraces, recomTrace, scatterTrace]);
+
+    let modifiedString = null;
+    if(category == "white" || category == "black" || category == "asian" || category == "native" || category == "pacific" ){
+      modifiedString = category.charAt(0).toUpperCase() + category.slice(1);
+    }
+    else{
+      modifiedString = category.charAt(0).toUpperCase() + category.slice(1).replace("_"," ");
+    }
 
     setLayout({
-      title: `Box-and-Whisker Plot for ${category.replace("_POP", "").toUpperCase()}`,
+      title: {
+        text: `Percentage of ${modifiedString} Population in ${stateName} In Large Ensemble (5000 Plans)`,
+        font: {
+          size: 20, // Adjust font size as needed
+          weight: "bold" // Makes the title bold
+        }
+      },
       xaxis: {
-        title: "Districts",
+        title: {
+          text: "Districts",
+          font: {
+            size: 18, // Adjust font size as needed
+          }
+        },
         tickangle: 0,
         tickvals: bucketNames,
         ticktext: bucketNames.map((bucket) => bucket),
       },
       yaxis: {
-        title: "Population (%)",
+        title: {
+          text: "Population (%)",
+          font: {
+            size: 18, // Adjust font size as needed
+          }
+        },
       },
       showlegend: true,
       autosize: true,
-      height:520,
+      height:580  ,
     });
   };
 
@@ -126,7 +164,7 @@ export default function BoxWhiskerPlot({ stateName }) {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: "20px"}}>
         <label htmlFor="display-select" style={{ marginRight: "10px" }}>Select Display:</label>
         <select
           id="display-select"
@@ -142,7 +180,7 @@ export default function BoxWhiskerPlot({ stateName }) {
         
         {selectedDisplay == "Race" && (
           <>
-          <label htmlFor="race-select" style={{ marginRight: "10px" }}>Select Race:</label>
+          <label htmlFor="race-select" style={{ marginRight: "10px", marginLeft: "10px" }}>Select Race:</label>
           <select
             id="race-select"
             value={raceGroup}
@@ -165,7 +203,7 @@ export default function BoxWhiskerPlot({ stateName }) {
 
         {selectedDisplay == "Income" && (
           <>
-          <label htmlFor="income-select" style={{ marginRight: "10px" }}>Select Income Group:</label>
+          <label htmlFor="income-select" style={{ marginRight: "10px", marginLeft: "10px"  }}>Select Income Group:</label>
           <select
             id="income-select"
             value={incomeGroup}
@@ -183,7 +221,7 @@ export default function BoxWhiskerPlot({ stateName }) {
 
         {selectedDisplay == "Region" && (
           <>
-          <label htmlFor="region-select" style={{ marginRight: "10px" }}>Select Region Type:</label>
+          <label htmlFor="region-select" style={{ marginRight: "10px", marginLeft: "10px"  }}>Select Region Type:</label>
           <select
             id="region-select"
             value={regionType}
