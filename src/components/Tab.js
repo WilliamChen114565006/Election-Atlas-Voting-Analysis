@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
 import '../styles/App.css';
 
-const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onDistrictsClick, fakecurrArea, changeLegendColor2, changeRaceOption}) => {
-  // State to track the active legend buttons
-  const [activeLegendButton, setActiveLegendButton] = useState('votingbutton'); // Set initial highlight for Voting
-  // State to track the active precinct or district button
-  const [activePrecinctDistrict, setActivePrecinctDistrict] = useState('district'); // Set initial highlight for Districts
-  const [selectedRaceOption, setSelectedRaceOption] = useState(''); // Track the selected race option
+const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onDistrictsClick, fakecurrArea, changeLegendColor2, changeRaceOption }) => {
+  const [activeLegendButton, setActiveLegendButton] = useState(''); // Initial highlight for Voting
+  const [activePrecinctDistrict, setActivePrecinctDistrict] = useState('district'); // Initial highlight for Districts
+  const [selectedRaceOption, setSelectedRaceOption] = useState(''); // Track selected race option
 
+  const isDistrictActive = activePrecinctDistrict === 'district';
 
   const handleLegendButtonClick = (buttonId) => {
+    if (isDistrictActive) return; // Prevent interaction if District is active
     setActiveLegendButton(buttonId);
-    // Call the respective function based on the button clicked
-    if (buttonId === 'votingbutton'){
-      changeLegendColor2("voting");
-    }
-    else if (buttonId === 'incomebutton'){
-      changeLegendColor2("income");
-    } 
-    else if (buttonId === "regionbutton"){
-      changeLegendColor2("region");
-    }
+    if (buttonId === 'votingbutton') changeLegendColor2("voting");
+    else if (buttonId === 'incomebutton') changeLegendColor2("income");
+    else if (buttonId === "regionbutton") changeLegendColor2("region");
     setSelectedRaceOption("");
   };
 
   const handleRaceOptionChange = (event) => {
+    if (isDistrictActive) return; // Prevent interaction if District is active
     const selectedOption = event.target.value;
     setSelectedRaceOption(selectedOption);
     changeRaceOption(selectedOption);
@@ -36,18 +30,24 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
     if (type === 'precinct') {
       if (stateName === "Louisiana") onPrecinctsClickLA();
       else if (stateName === "New Jersey") onPrecinctsClickNJ();
+      changeLegendColor2("voting");
+      setActiveLegendButton('votingbutton');
     } else {
       onDistrictsClick();
+      setActiveLegendButton('');
+      setSelectedRaceOption('');
+      changeLegendColor2("district");
     }
   };
 
   return (
     <div className={`tab ${isVisible ? 'slide-in' : 'slide-out'}`}>
       <div className="columnizebutton">
-        <button 
-          id="votingbutton" 
-          className={activeLegendButton === 'votingbutton' ? 'active' : ''} 
+        <button
+          id="votingbutton"
+          className={`${activeLegendButton === 'votingbutton' ? 'active' : ''} ${isDistrictActive ? 'disabled' : ''}`}
           onClick={() => handleLegendButtonClick('votingbutton')}
+          disabled={isDistrictActive}
         >
           Voting
         </button>
@@ -56,7 +56,8 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
           id="raceDropdown"
           value={selectedRaceOption}
           onChange={handleRaceOptionChange}
-          className="race-dropdown"
+          className={`race-dropdown ${isDistrictActive ? 'disabled' : ''}`}
+          disabled={isDistrictActive}
         >
           <option value="" disabled>Select Race</option>
           <option value="white">White</option>
@@ -67,57 +68,46 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
           <option value="other">Other</option>
         </select>
 
-        <button 
-          id="votingbutton" 
-          className={activeLegendButton === 'regionbutton' ? 'active' : ''} 
+        <button
+          id="regionbutton"
+          className={`${activeLegendButton === 'regionbutton' ? 'active' : ''} ${isDistrictActive ? 'disabled' : ''}`}
           onClick={() => handleLegendButtonClick('regionbutton')}
+          disabled={isDistrictActive}
         >
           Region
         </button>
 
-        <button 
-          id="incomebutton" 
-          className={activeLegendButton === 'incomebutton' ? 'active' : ''} 
+        <button
+          id="incomebutton"
+          className={`${activeLegendButton === 'incomebutton' ? 'active' : ''} ${isDistrictActive ? 'disabled' : ''}`}
           onClick={() => handleLegendButtonClick('incomebutton')}
+          disabled={isDistrictActive}
         >
           Income
         </button>
-        
-        
-        {/* <div id="precinct-district-buttons"> */}
-        <button 
-          id="districtbutton" 
-          className={activePrecinctDistrict === 'district' ? 'active' : ''} 
+
+        <button
+          id="districtbutton"
+          className={activePrecinctDistrict === 'district' ? 'active' : ''}
           onClick={() => handlePrecinctDistrictClick('district')}
         >
           Districts
         </button>
 
-        {stateName === "Louisiana" && (
-          <button 
-            id="precinctbutton" 
-            className={activePrecinctDistrict === 'precinct' ? 'active' : ''} 
+        {(stateName === "Louisiana" || stateName === "New Jersey") && (
+          <button
+            id="precinctbutton"
+            className={activePrecinctDistrict === 'precinct' ? 'active' : ''}
             onClick={() => handlePrecinctDistrictClick('precinct')}
           >
             Precincts
           </button>
         )}
-        {stateName === "New Jersey" && (
-          <button 
-            id="precinctbutton" 
-            className={activePrecinctDistrict === 'precinct' ? 'active' : ''} 
-            onClick={() => handlePrecinctDistrictClick('precinct')}
-          >
-            Precincts
-          </button>
-        )}
-        {/* </div> */}
       </div>
 
       <div id="fakecurrArea">
         {fakecurrArea}
       </div>
-
     </div>
   );
 };

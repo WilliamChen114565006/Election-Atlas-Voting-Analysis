@@ -47,7 +47,7 @@ export default function App() {
   const[isLegendVisible, setLegendVisible] = useState(false);
   const [allVoteData2, setAllVoteData2] = useState([]);
   const [minorityDensityDataLA, setMinorityDensityDataLA] = useState([]);
-  const[isIncomeLegend, setIncomeLegend]=useState("voting");
+  const[isIncomeLegend, setIncomeLegend]=useState("district");
   const [isAllIncomeData, setisAllIncomeData] = useState([]);
   const [isAllIncomeData2, setisAllIncomeData2] = useState([]);
   const [minorityDensityDataNJ, setMinorityDensityDataNJ] = useState([]);

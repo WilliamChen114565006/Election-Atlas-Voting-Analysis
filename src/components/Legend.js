@@ -69,6 +69,11 @@ export default function Legend({ isVisible, legendColor, colors }) {
     );
       
   }
+  else if(legendColor === "district"){
+    return(
+      <></>
+    );
+  }
   else{
   return (
     <div className="legend-container">
