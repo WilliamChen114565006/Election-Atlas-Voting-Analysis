@@ -10,6 +10,7 @@ import BoxWhiskerPlot from './BoxWhiskerPlot';
 import EnsembleSummaryBarGraph from './EnsembleSummaryBarGraph';
 import HistogramChart from './HistogramChart';
 import RegionChart from './RegionChart';
+import EcologicalInference from './EcologicalInference';
 import '../styles/Tabs.css';
 
 export default function InfoPanel({ stateName, currArea, handleArrowClick, currState, handleSelectedDistrict }) {
@@ -121,7 +122,8 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               )}
               {activeTab === 1 && (
                 <div className='tab-box'>
-                  <ScatterPlot stateName={stateName} />
+                  <ScatterPlot 
+                  stateName={stateName} />
                 </div>
               )}
               {activeTab === 2 && (
@@ -131,7 +133,7 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               )}
               {activeTab === 3 && (
                 <div className='tab-box'>
-                  <HistogramChart stateName={stateName} />
+                  <EcologicalInference stateName={stateName} />
                 </div>
               )}
               {activeTab === 4 && (
