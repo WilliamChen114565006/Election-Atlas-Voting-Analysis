@@ -87,15 +87,15 @@ public class ServerController {
 
     @GetMapping("/info/{state}")
     public ResponseEntity<Map<String, Object>> getStateSummary(@PathVariable String state) {
-        String cacheKey = state + SUMMARY_CACHE_KEY_SUFFIX;
-        String cacheName = SUMMARY_CACHE;
-        Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
-        if (cachedData != null) {
-            return ResponseEntity.ok(cachedData);
-        }
+        // String cacheKey = state + SUMMARY_CACHE_KEY_SUFFIX;
+        // String cacheName = SUMMARY_CACHE;
+        // Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
+        // if (cachedData != null) {
+        //     return ResponseEntity.ok(cachedData);
+        // }
         StateSummary summary = stateSumRepo.findByStateIgnoreCase(state);
         Map<String, Object> summaryData = summary.getSummary();
-        cacheHandler.putToCache(cacheKey, summaryData, cacheName);
+        // cacheHandler.putToCache(cacheKey, summaryData, cacheName);
         return ResponseEntity.ok(summaryData);
     }
 
@@ -129,7 +129,7 @@ public class ServerController {
 
     @GetMapping("/box-and-whisker/{state}/{type}")
     public ResponseEntity<Map<String, Object>> getBoxAndWhisker(@PathVariable String state, @PathVariable String type) throws IOException {
-        System.out.println(type);
+        //System.out.println(type);
         String cacheKey=state+type+BW_KEY_SUFFIX;
         String cacheName=BW_CACHE;
         Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);

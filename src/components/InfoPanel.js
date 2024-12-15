@@ -22,7 +22,6 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
       const response = await axios.get(`http://localhost:8080/info/${stateName}`);
       console.log(response.data)
       setStateData(response.data);
-      console.log(stateData);
     } catch (error) {
       console.error('Error fetching state data:', error);
     }
@@ -31,6 +30,8 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
   useEffect(() => {
     setMinimizeInfoPanel(false);
     fetchStateData();
+    console.log("HELLOOOOOO", stateData);
+    console.log(stateData?.winning_party);
   }, [stateName]);
   
   const handleChange = (event, newValue) => {
@@ -90,7 +91,7 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
                       {currArea && <Chart currArea={currArea} />}
                     </div>
                     <div className="VotingChart">
-                      {currArea && <VotingChart currArea={currArea} currState={currState}/>}
+                      {currArea && <VotingChart currArea={currArea} currState={currState} incomData={stateData?.income_data}/>}
                     </div>
                   </div>
                   <div className="IncomeChart">
