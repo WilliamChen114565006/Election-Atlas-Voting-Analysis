@@ -1153,6 +1153,7 @@ const onEachPrecinctFeature = (feature, layer) => {
           <GeoJSON data={precinctsDataNJ} style={isIncomeLegend === "voting"? getPrecinctStyle:
             isIncomeLegend === "race" ? getPrecinctBlackStyle: 
             isIncomeLegend === "region" ? getPrecinctRegionStyle :
+            isIncomeLegend === "poverty" ? getPrecinctPovertyStyle :
             isIncomeLegend === "income" ? getPrecinctIncomeStyle: null
           } 
           onEachFeature={onEachPrecinctFeature} />
