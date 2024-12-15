@@ -58,7 +58,7 @@ const IncomeChart = ({ currArea, currState}) => {
   }, [currArea]);
 
   return (<div>
-    <div className='Total'>Total Households: {totalHouseholds.toLocaleString()}</div>
+    <div className='Total'> <strong>Total Households: </strong>{totalHouseholds.toLocaleString()}</div>
     <div className="chart-container">
       {chartData ? (
         <Bar

@@ -3,7 +3,7 @@ import Papa from 'papaparse';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 
-const PopulationChart = ({ currArea }) => {
+const PopulationChart = ({ currArea, stateData }) => {
   const [chartData, setChartData] = useState(null);
   const [totalPopulation, setTotalPopulation] = useState(0);
   const [chartTitle, setChartTitle] = useState('');
@@ -152,11 +152,11 @@ const PopulationChart = ({ currArea }) => {
 
   useEffect(() => {
     loadData();
-  }, [currArea]);
+  }, [currArea, stateData]);
 
   return (
     <div>
-      <div>Total Population: {totalPopulation.toLocaleString()}</div>
+      <div><strong>Total Population: </strong>{totalPopulation.toLocaleString()}</div>
       <div className="chart-container">
         {chartData ? (
           <Bar

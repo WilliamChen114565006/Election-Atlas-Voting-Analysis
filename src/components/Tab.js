@@ -28,7 +28,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
     if (buttonId === 'votingbutton') changeLegendColor2("voting");
     else if (buttonId === 'incomebutton') changeLegendColor2("income");
     else if (buttonId === "regionbutton") changeLegendColor2("region");
-    else if (buttonId === "povertybutton") changeLegendColor2("voting");
+    else if (buttonId === "povertybutton") changeLegendColor2("poverty");
     setSelectedRaceOption("");
   };
 

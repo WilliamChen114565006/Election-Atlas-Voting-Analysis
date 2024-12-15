@@ -699,11 +699,18 @@ path.leaflet-interactive:focus {
   width: 48%;
 }
 
-.IncomeChart {
-  width: 50%;
-  margin-top: 20px;
-  margin-left: 25%;
+.DoubleContainer{
+  display: flex; /* Enables flexbox */
+  justify-content: flex-start; /* Align items to the left */
+  gap: 50px; /* Adds spacing between divs (optional) */
 }
+
+.IncomeChart, .RegionChart {
+  width: 46%;
+  margin-top: 20px;
+  /* margin-left: 25%; */
+}
+
 .tooltip {
   position: relative;
   display: inline-block;

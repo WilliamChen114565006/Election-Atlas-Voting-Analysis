@@ -54,7 +54,6 @@ export default function App() {
   const [colors, setColors] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [race, setRace] = useState("white");
-
   const[reset, setReset] = useState("false");
 
   const StateEnum = Object.freeze({
@@ -80,8 +79,8 @@ export default function App() {
 //GEOJSON API CALLS-----------------------------------------
 const fetch_NJ_Districts_GeoJson = async () => {
   try {
-      const response = await axios.get('http://localhost:8080/district-boundary/New Jersey');
-      setGeojsonDataNJ(response.data);
+    const response = await axios.get('http://localhost:8080/district-boundary/New Jersey');
+    setGeojsonDataNJ(response.data);
   } catch (error) {
       console.error('Error fetching GeoJSON:', error);
   }
@@ -561,6 +560,7 @@ const handlePrecinctsClickNJ = () => {
     };
   };
 
+  //DISTRICT STYLE
   const getDistrictStyle = (feature) => {
     const isSelected = feature.properties.name === selectedDistrict;
     const party = feature.properties.party;
@@ -580,7 +580,6 @@ const handlePrecinctsClickNJ = () => {
     };
   };
   
-
 //RACE PRECINCT STYLE (BLACK)
 const getPrecinctBlackStyle = (feature) => {
   let raceOption= race.toUpperCase()+"_POP";
@@ -710,6 +709,43 @@ const getPrecinctRegionStyle = (feature) =>{
       opacity: 1,
       fillOpacity: highlightedFeature === feature ? 0.7 : 0.8,
     };
+}
+
+//POVERTY PRECINCT STYLE
+const getPrecinctPovertyStyle = (feature) =>{
+    const { poverty_fraction }=feature.properties;
+    const poverty_percentage=poverty_fraction*100;
+    let color="";
+    if (poverty_percentage > 91) {
+      color = "90%-100%";
+  } else if (poverty_percentage > 81) {
+      color = "80%-90%";
+  } else if (poverty_percentage > 71) {
+      color = "70%-80%";
+  } else if (poverty_percentage > 61) {
+      color = "60%-70%";
+  } else if (poverty_percentage > 51) {
+      color = "50%-60%";
+  } else if (poverty_percentage > 41) {
+      color = "40%-50%";
+  } else if (poverty_percentage > 31) {
+      color = "30%-40%";
+  } else if (poverty_percentage > 21) {
+      color = "20%-30%";
+  } else if (poverty_percentage > 11) {
+      color = "10%-20%";
+  } else {
+      color = "0%-10%";
+  }
+  let povertyColor=colors[color];
+
+  return {
+    fillColor: povertyColor,
+    weight: 0.5,
+    opacity: 1,
+    color: "black",
+    fillOpacity: highlightedFeature === feature ? 0.5 : 0.7,
+};
 }
 
 
@@ -1108,6 +1144,7 @@ const onEachPrecinctFeature = (feature, layer) => {
           <GeoJSON data={precinctsDataLA} style={isIncomeLegend === "voting" ? getPrecinctStyle: 
             isIncomeLegend === "race" ? getPrecinctBlackStyle : 
             isIncomeLegend === "region" ? getPrecinctRegionStyle :
+            isIncomeLegend === "poverty" ? getPrecinctPovertyStyle :
             isIncomeLegend === "income" ? getPrecinctIncomeStyle : null
           } 
           onEachFeature={onEachPrecinctFeature}/>

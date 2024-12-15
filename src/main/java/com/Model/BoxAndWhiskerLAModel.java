@@ -13,9 +13,9 @@ import java.util.Map;
 public class BoxAndWhiskerLAModel {
     private String state;
     private String type;
-    private Map<String, Object> WHITE_POP;
-    private Map<String, Object> BLACK_POP;
-    private Map<String, Object> ASIAN_POP;
-    private Map<String, Object> NATIVE_POP;
-    private Map<String, Object> PACIFIC_POP;
+    private Map<String, Object> White;
+    private Map<String, Object> Black;
+    private Map<String, Object> Asian;
+    private Map<String, Object> Native;
+    private Map<String, Object> Pacific;
 }
