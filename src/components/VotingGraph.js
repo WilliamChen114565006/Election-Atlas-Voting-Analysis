@@ -116,7 +116,7 @@ const VotingChart = ({ currArea, currState }) => {
 
   return (
     <div>
-      <div className='Total'>Total Votes: {totalVotes.toLocaleString()}</div>
+      <div className='Total'><strong>Total Votes: </strong>{totalVotes.toLocaleString()}</div>
       <div className="chart-container">
         {chartData ? (
           <Bar

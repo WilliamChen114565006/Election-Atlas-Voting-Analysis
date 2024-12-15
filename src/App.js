@@ -47,24 +47,19 @@ export default function App() {
   const[isLegendVisible, setLegendVisible] = useState(false);
   const [allVoteData2, setAllVoteData2] = useState([]);
   const [minorityDensityDataLA, setMinorityDensityDataLA] = useState([]);
-  const[isIncomeLegend, setIncomeLegend]=useState("voting");
+  const[isIncomeLegend, setIncomeLegend]=useState("district");
   const [isAllIncomeData, setisAllIncomeData] = useState([]);
   const [isAllIncomeData2, setisAllIncomeData2] = useState([]);
   const [minorityDensityDataNJ, setMinorityDensityDataNJ] = useState([]);
   const [colors, setColors] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [race, setRace] = useState("white");
-
+  const[reset, setReset] = useState("false");
 
   const StateEnum = Object.freeze({
     LOUISIANA: 'louisiana',
     NEW_JERSEY: 'newjersey',
   });
-
-
-  const changeRaceOption = (type) =>{
-    setRace(type);
-  }
 
   //FETCHING COLORS-----------------------------
   const {colors: fetchedColors} = useFetchLegendColor(isIncomeLegend);
@@ -405,7 +400,6 @@ const handlePrecinctsClickNJ = () => {
 //DISTRICT VOTING COLORS
   const getFeatureStyle = (feature) => {
     const party = feature.properties.party;
-
     const partyColor = colors[party] || '#ffffff';
     return {
       fillColor: partyColor,
@@ -566,6 +560,7 @@ const handlePrecinctsClickNJ = () => {
     };
   };
 
+  //DISTRICT STYLE
   const getDistrictStyle = (feature) => {
     const isSelected = feature.properties.name === selectedDistrict;
     const party = feature.properties.party;
@@ -585,7 +580,6 @@ const handlePrecinctsClickNJ = () => {
     };
   };
   
-
 //RACE PRECINCT STYLE (BLACK)
 const getPrecinctBlackStyle = (feature) => {
   let raceOption= race.toUpperCase()+"_POP";
@@ -629,25 +623,45 @@ const getPrecinctBlackStyle = (feature) => {
 
 //VOTING PRECINCT STYLE
   const getPrecinctStyle = (feature) => {
-    let partyColor;
-    let hueColor;
-    // console.log(`Precinct: ${data.precinct}, Biden Votes: ${data.bidenVote}, Trump Votes: ${data.trumpVote}`);
+    let partyColor=0;
+    let hueColor=100;
+    const { AVG_INC } = feature.properties;
     if(feature.properties.G20PREDBID > feature.properties.G20PRERTRU)
     {
-      partyColor=colors["Democrat"];
+      partyColor=240;
     }
     else
     {
-      partyColor=colors["Republican"];
+      partyColor=0;
     }
-        
-    return {
-      fillColor: partyColor || '#ffffff',
-      color: '#000000',
-      weight: 0.5,
-      opacity: 1,
-      fillOpacity: highlightedFeature === feature ? 0.7 : 0.5,
-    };
+
+    if (AVG_INC < 20000){
+      hueColor="90%";
+    }
+    else if(AVG_INC < 35000){
+      hueColor="75%";
+    }
+    else if(AVG_INC < 50000){
+      hueColor="60%";
+    }
+    else if(AVG_INC < 100000){
+      hueColor="45%";
+    }
+    else if(AVG_INC < 200000){
+      hueColor="30%";
+    }
+    else if(AVG_INC >= 200000){
+      hueColor="15%";
+    }
+
+    const adjustedColor = `hsl(${partyColor}, 100%, ${hueColor})`; 
+  return {
+    fillColor: adjustedColor || '#ffffff', // Use the adjusted color
+    color: '#000000',
+    weight: 0.5,
+    opacity: 1,
+    fillOpacity: highlightedFeature === feature ? 0.7 : 0.8,
+  };
   }
 
 //AVERAGE INCOME PRECINCT STYLE
@@ -683,6 +697,57 @@ const getPrecinctIncomeStyle = (feature) => {
   };
 
 }
+//REGION PRECINCT STYLE
+const getPrecinctRegionStyle = (feature) =>{
+    const { classification } = feature.properties;
+    const upperClassification= classification.charAt(0).toUpperCase() + classification.slice(1).toLowerCase();
+    const color=colors[upperClassification];
+    return {
+      fillColor: color || '#ffffff',
+      color: '#000000',
+      weight: 0.5,
+      opacity: 1,
+      fillOpacity: highlightedFeature === feature ? 0.7 : 0.8,
+    };
+}
+
+//POVERTY PRECINCT STYLE
+const getPrecinctPovertyStyle = (feature) =>{
+    const { poverty_fraction }=feature.properties;
+    const poverty_percentage=poverty_fraction*100;
+    let color="";
+    if (poverty_percentage > 91) {
+      color = "90%-100%";
+  } else if (poverty_percentage > 81) {
+      color = "80%-90%";
+  } else if (poverty_percentage > 71) {
+      color = "70%-80%";
+  } else if (poverty_percentage > 61) {
+      color = "60%-70%";
+  } else if (poverty_percentage > 51) {
+      color = "50%-60%";
+  } else if (poverty_percentage > 41) {
+      color = "40%-50%";
+  } else if (poverty_percentage > 31) {
+      color = "30%-40%";
+  } else if (poverty_percentage > 21) {
+      color = "20%-30%";
+  } else if (poverty_percentage > 11) {
+      color = "10%-20%";
+  } else {
+      color = "0%-10%";
+  }
+  let povertyColor=colors[color];
+
+  return {
+    fillColor: povertyColor,
+    weight: 0.5,
+    opacity: 1,
+    color: "black",
+    fillOpacity: highlightedFeature === feature ? 0.5 : 0.7,
+};
+}
+
 
   const defaultStateStyle = (feature) => ({
     fillColor: '#ffffff',
@@ -852,7 +917,10 @@ const onEachPrecinctFeature = (feature, layer) => {
       fetch_LA_Districts_GeoJson();
       setCurrentMap(StateEnum.LOUISIANA);
       setSelectedState("Louisiana");
-      setCurrArea("Louisiana")
+      setCurrArea("Louisiana");
+
+      setReset(true);
+
       centerMap(centerLouisiana, zoomLevels.louisiana);
       setShowTileLayer(true);
       setIsInfoVisible(true);
@@ -870,7 +938,10 @@ const onEachPrecinctFeature = (feature, layer) => {
       fetch_NJ_Districts_GeoJson();
       setCurrentMap(StateEnum.NEW_JERSEY);
       setSelectedState("New Jersey");
-      setCurrArea("New Jersey")
+      setCurrArea("New Jersey");
+
+      setReset(true);
+
       centerMap(centerNewJersey, zoomLevels.newjersey);
       setShowTileLayer(true);
       setIsInfoVisible(true);
@@ -1009,7 +1080,6 @@ const onEachPrecinctFeature = (feature, layer) => {
     />
   )}
 
-      
       <Tab 
         isVisible={isTabVisible} 
         stateName={selectedState} 
@@ -1018,7 +1088,9 @@ const onEachPrecinctFeature = (feature, layer) => {
         onDistrictsClick={handleDistrictsClick}
         fakecurrArea={fakecurrArea}
         changeLegendColor2={changeLegendColor}
-        changeRaceOption={changeRaceOption}
+        changeRaceOption={setRace}
+        reset={reset}
+        setReset={setReset}
       />
 
       <Legend isVisible={isLegendVisible}
@@ -1049,14 +1121,14 @@ const onEachPrecinctFeature = (feature, layer) => {
           {showDistrictsLA && geojsonDataLA && (
             <GeoJSON data={geojsonDataLA} style={isIncomeLegend === "income" ? getDistrictLAStyleIncome :
               selectedDistrict !== null ? getDistrictStyle :
-              isIncomeLegend === "voting" ? getFeatureStyle :
+              isIncomeLegend === "district" ? getFeatureStyle :
               isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_LA : getFeatureStyle} onEachFeature={onEachFeature} />
           )}
 
           {showDistrictsNJ && geojsonDataNJ && (
             <GeoJSON data={geojsonDataNJ} style={isIncomeLegend === "income" ? getDistrictNJStyleIncome :
               selectedDistrict !== null ? getDistrictStyle :
-              isIncomeLegend === "voting" ? getFeatureStyle :
+              isIncomeLegend === "district" ? getFeatureStyle :
               isIncomeLegend === "race" ? getFeatureStyle_Race_Heat_Map_NJ : getFeatureStyle} onEachFeature={onEachFeature} />
           )}
 
@@ -1071,6 +1143,8 @@ const onEachPrecinctFeature = (feature, layer) => {
           {showPrecinctsLA && precinctsDataLA && (
           <GeoJSON data={precinctsDataLA} style={isIncomeLegend === "voting" ? getPrecinctStyle: 
             isIncomeLegend === "race" ? getPrecinctBlackStyle : 
+            isIncomeLegend === "region" ? getPrecinctRegionStyle :
+            isIncomeLegend === "poverty" ? getPrecinctPovertyStyle :
             isIncomeLegend === "income" ? getPrecinctIncomeStyle : null
           } 
           onEachFeature={onEachPrecinctFeature}/>
@@ -1078,6 +1152,8 @@ const onEachPrecinctFeature = (feature, layer) => {
           {showPrecinctsNJ && precinctsDataNJ && (
           <GeoJSON data={precinctsDataNJ} style={isIncomeLegend === "voting"? getPrecinctStyle:
             isIncomeLegend === "race" ? getPrecinctBlackStyle: 
+            isIncomeLegend === "region" ? getPrecinctRegionStyle :
+            isIncomeLegend === "poverty" ? getPrecinctPovertyStyle :
             isIncomeLegend === "income" ? getPrecinctIncomeStyle: null
           } 
           onEachFeature={onEachPrecinctFeature} />

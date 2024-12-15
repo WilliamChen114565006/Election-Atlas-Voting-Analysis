@@ -15,9 +15,11 @@ import com.Model.DistrictBoundary;
 import com.Model.CongressionalTable;
 import com.Model.GinglesData;
 import com.Model.GinglesIncomeData;
+import com.Model.EcologicalInference;
 import com.Repository.DistrictBoundaryRepository;
 import com.Repository.GinglesIncomeDataRepository;
 import com.Repository.GinglesRaceDataRepository;
+import com.Repository.EcologicalInferenceRepository;
 import com.Model.BoxAndWhiskerLAModel;
 import com.Model.BoxAndWhiskerIncomeModel;
 import com.Model.BoxAndWhiskerRegionModel;
@@ -43,6 +45,7 @@ public class ServerController {
     private static final String CONGRESSIONAL_TABLE_CACHE_KEY_SUFFIX = "congressionalTableKey";
     private static final String GINGLES_CACHE_KEY_SUFFIX = "ginglesKey";
     private static final String ENSEMBLE_SUMMARY_DATA_SUFFIX = "ensembleKey";
+    private static final String ECOINFERENCE_CACHE_KEY_SUFFIX = "ecoKey";
     private static final String SUMMARY_CACHE="stateSummaryData";
     private static final String PRECINCT_CACHE="precinctData";
     private static final String DISTRICT_CACHE="districtData";
@@ -50,6 +53,7 @@ public class ServerController {
     private static final String ES_CACHE="ensembleSummaryData";
     private static final String CONGRESSIONAL_TABLE_CACHE="congressionalCache";
     private static final String GINGLES_CACHE="ginglesCache";
+    private static final String ECOINFERENCE_CACHE="ecoCache";
     private final ObjectMapper objectMapper = new ObjectMapper();
     
     @Autowired
@@ -85,17 +89,20 @@ public class ServerController {
     @Autowired
     private EnsembleSummaryBarGraphRepository EnsembleSummaryRepo;
 
+    @Autowired
+    private EcologicalInferenceRepository EcoInferenceRepo;
+
     @GetMapping("/info/{state}")
     public ResponseEntity<Map<String, Object>> getStateSummary(@PathVariable String state) {
-        // String cacheKey = state + SUMMARY_CACHE_KEY_SUFFIX;
-        // String cacheName = SUMMARY_CACHE;
-        // Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
-        // if (cachedData != null) {
-        //     return ResponseEntity.ok(cachedData);
-        // }
+        String cacheKey = state + SUMMARY_CACHE_KEY_SUFFIX;
+        String cacheName = SUMMARY_CACHE;
+        Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
+        if (cachedData != null) {
+            return ResponseEntity.ok(cachedData);
+        }
         StateSummary summary = stateSumRepo.findByStateIgnoreCase(state);
         Map<String, Object> summaryData = summary.getSummary();
-        // cacheHandler.putToCache(cacheKey, summaryData, cacheName);
+        cacheHandler.putToCache(cacheKey, summaryData, cacheName);
         return ResponseEntity.ok(summaryData);
     }
 
@@ -129,7 +136,6 @@ public class ServerController {
 
     @GetMapping("/box-and-whisker/{state}/{type}")
     public ResponseEntity<Map<String, Object>> getBoxAndWhisker(@PathVariable String state, @PathVariable String type) throws IOException {
-        //System.out.println(type);
         String cacheKey=state+type+BW_KEY_SUFFIX;
         String cacheName=BW_CACHE;
         Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
@@ -190,7 +196,12 @@ public class ServerController {
             cacheHandler.putToCache(cacheKey, ginglesSummary, cacheName);
             return ResponseEntity.ok(ginglesSummary);
         }
+
+        // System.out.println("I GET TO HERE AT LEAST");
+        // System.out.println(state);
+        // System.out.println(selectedDisplay);
         GinglesData ginglesData = ginglesRepo.findByStateIgnoreCaseAndDataIgnoreCaseAndRaceIgnoreCase(state, selectedDisplay, race);
+        System.out.println(ginglesData);
         Map<String, Object> ginglesSummary = objectMapper.convertValue(ginglesData, new TypeReference<Map<String, Object>>() {});
         cacheHandler.putToCache(cacheKey, ginglesSummary, cacheName);
         return ResponseEntity.ok(ginglesSummary);
@@ -211,25 +222,27 @@ public class ServerController {
         return ResponseEntity.ok(jsonMap);
     }
 
-    //DEPRICATED VERSION: REMOVE WHEN NJ DISTRICT BOUNDARIES ARE PREPROCESSED
-    @GetMapping("/Data/{state}/{geoLevel}/{fileType}")
-    public ResponseEntity<String> getGeoJson(@PathVariable String state, @PathVariable String geoLevel, @PathVariable String fileType) throws IOException {
-        Resource resource = new ClassPathResource(state + geoLevel + "." + fileType);
-        String GeoJson = new String(Files.readAllBytes(resource.getFile().toPath()));
-        return ResponseEntity.ok(GeoJson);
-    }
-
-    //NOT COMPLETE
-    @GetMapping("/chart/ecological-inference")
-    public ResponseEntity<Map<String, Object>> getEIData() {
-        return null;
+    @GetMapping("/ecologicalinference/{selectedDisplay}/{state}/{race}/{candidate}")
+    public ResponseEntity<Map<String, Object>> getEcologicalInference(@PathVariable String selectedDisplay, @PathVariable String state, @PathVariable String race, @PathVariable String candidate) throws IOException {
+        String cacheKey;
+        String cacheName = ECOINFERENCE_CACHE;
+        cacheKey = selectedDisplay + state + race + candidate + ECOINFERENCE_CACHE_KEY_SUFFIX;
+        Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
+        if (cachedData != null) {
+            return ResponseEntity.ok(cachedData);
+        }
+        EcologicalInference ecoData= EcoInferenceRepo.findByStateIgnoreCaseAndRaceIgnoreCaseAndCandidateIgnoreCaseAndTypeIgnoreCase(state, race, candidate, selectedDisplay);
+        Map<String, Object> jsonEco = objectMapper.convertValue(ecoData, new TypeReference<Map<String, Object>>() {});
+        cacheHandler.putToCache(cacheKey, jsonEco, cacheName);
+        return ResponseEntity.ok(jsonEco);
     }
 
     @GetMapping("/Data/colors/{category}")
     public Map<String, String> getColors(@PathVariable String category) {
         try {
             ClassPathResource resource = new ClassPathResource("colors/" + category.toLowerCase() + ".json");
-            return objectMapper.readValue(resource.getInputStream(), Map.class);
+            Map<String, String> colorObj=objectMapper.readValue(resource.getInputStream(), Map.class);
+            return colorObj;
         } catch (IOException e) {
             e.printStackTrace();
             return Map.of(); 
