@@ -71,7 +71,17 @@ export default function Legend({ isVisible, legendColor, colors }) {
   }
   else if(legendColor === "district"){
     return(
-      <></>
+      <div className="legend-container">
+      <h4>Voting</h4>
+      <ul className="legend-list">
+        {Object.entries(colors).map(([label, color]) => (
+          <li key={label}>
+            <span className="legend-color" style={{ backgroundColor: color }}></span>
+            {label}
+          </li>
+        ))}
+      </ul>
+    </div>
     );
   }
   else{
