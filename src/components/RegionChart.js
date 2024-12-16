@@ -8,20 +8,20 @@ export default function RegionChart({ currArea, stateData}){
 
     // Prepare data for the chart
     const chartData = {
-        labels: ['Rural', 'Urban', 'Suburban'],
+        labels: ['Rural', 'Suburban', 'Urban'],
         datasets: [
             {
                 label: 'Percentage',
-                data: [percent_rural, percent_urban, percent_suburban],
+                data: [percent_rural, percent_suburban, percent_urban],
                 backgroundColor: [
                     'green', 
-                    'purple', 
-                    'orange'
+                    'orange', 
+                    'purple'
                 ],
                 borderColor: [
                     'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgb(253, 213, 32)'
+                    'rgb(253, 213, 32)',
+                    'rgba(153, 102, 255, 1)'
                 ],
                 borderWidth: 1
             }
@@ -31,6 +31,7 @@ export default function RegionChart({ currArea, stateData}){
     // Configure options for the chart
     const chartOptions = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             title: {
                 display: true,
@@ -42,12 +43,12 @@ export default function RegionChart({ currArea, stateData}){
                 }
             },
             legend: {
-                display: true,
+                display: false,
                 position: 'top'
             },
             tooltip: {
                 callbacks: {
-                    label: (context) => `${context.raw}%`
+                    label: (context) => `${context.raw}`
                 }
             }
         },
@@ -73,7 +74,7 @@ export default function RegionChart({ currArea, stateData}){
                 max: 100,
                 title: {
                     display: true,
-                    text: 'Share of Households (%)', 
+                    text: 'Total Precincts (%)', 
                     font: {
                       family: 'Open Sans',
                       size: 14 
@@ -84,7 +85,7 @@ export default function RegionChart({ currArea, stateData}){
                         family: 'Open Sans',
                         size: 12 
                       },
-                    callback: (value) => `${value}%`
+                    callback: (value) => `${value}`
                 }
             }
         }
@@ -92,10 +93,11 @@ export default function RegionChart({ currArea, stateData}){
 
     return (
         <div>
-        <div className='Total'> <strong>Total Precincts: </strong>  {stateData.total_precincts.toLocaleString()}</div>
+        {/* <div className='Total'> <strong>Total Precincts: </strong>  {stateData.total_precincts.toLocaleString()}</div> */}
         <div className='chart-container'>
-            <Bar data={chartData} options={chartOptions} />
+            <Bar data={chartData} options={chartOptions} height={'45%'} width={'100%'}/>
         </div>
+        <div className='Total'> <strong>Total Precincts: </strong>  {stateData.total_precincts.toLocaleString()}</div>
         </div>
     );
 

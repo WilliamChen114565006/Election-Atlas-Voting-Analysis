@@ -6,12 +6,12 @@ const HistogramChart = () => {
   const [chartData, setChartData] = useState(null);
 
   const loadData = async () => {
-    const response = await fetch('black_non_black_biden.json'); // Ensure this file is in your public folder
+    const response = await fetch('white_non_white_trump.json'); // Ensure this file is in your public folder
     const data = await response.json();
 
     // Extract group data
-    const group1Values = data.map((row) => row.black);
-    const group2Values = data.map((row) => row.non_black);
+    const group1Values = data.map((row) => row.white);
+    const group2Values = data.map((row) => row.non_white);
 
     // Generate histogram data
     const createHistogram = (values, bins = 2000) => {
@@ -43,18 +43,20 @@ const HistogramChart = () => {
       labels: histogram1.labels,
       datasets: [
         {
-          label: 'Black',
+          label: 'White',
           data: histogram1.counts,
-          backgroundColor: 'rgba(0, 0, 0, 1)',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjusted opacity
           borderColor: 'rgba(0, 0, 0, 1)',
           borderWidth: 1,
+          barThickness: 8, // Narrower bars
         },
         {
-          label: 'Non-Black',
+          label: 'Non-White',
           data: histogram2.counts,
-          backgroundColor: 'rgba(255, 99, 132, 0.6)',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)', // Adjusted opacity
           borderColor: 'rgba(255, 99, 132, 1)',
           borderWidth: 1,
+          barThickness: 8, // Narrower bars
         },
       ],
     });
@@ -82,9 +84,16 @@ const HistogramChart = () => {
                   position: 'top',
                 },
               },
+              responsive: true,
               scales: {
-                x: { title: { display: true, text: 'Bins' } },
-                y: { title: { display: true, text: 'Frequency' } },
+                x: {
+                  title: { display: true, text: 'Bins' },
+                  stacked: false, // To ensure groups don't stack
+                },
+                y: {
+                  title: { display: true, text: 'Frequency' },
+                  beginAtZero: true,
+                },
               },
             }}
           />

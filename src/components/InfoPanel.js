@@ -29,6 +29,7 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
       console.error('Error fetching state data:', error);
     } finally {
       setLoading(false); // End loading
+      console.log("HELLOOOOOO", stateData);
     }
   };
 
@@ -98,9 +99,24 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
             <Box sx={{ padding: 2 }}>
               {activeTab === 0 && (
                 <div className='tab-box'>
+                  <div id="ensembleTableDiv">
+                    <table id="ensembleTable">
+                      <tr>
+                        <td style={{ borderRight: '2px solid black' }} class="ensembleTableRow1"><strong>Available Ensembles</strong></td>
+                        <td style={{ borderRight: '2px solid black' }} class="ensembleTableRow1"><strong>Number of District Plans</strong></td>
+                        <td class="ensembleTableRow1"><strong>Population Equality Threshold</strong></td>
+                      </tr>
+                      <tr>
+                        <td style={{ borderRight: '2px solid black' }}>Large Ensemble</td>
+                        <td style={{ borderRight: '2px solid black' }}>5000 Plans</td>
+                        <td>5%</td>
+                      </tr>
+                    </table>
+                  </div>
                   <div className="topChartsContainer">
                     <div className="PopChart">
-                      {currArea && <Chart currArea={currArea} stateData={stateData} />}
+                      {/* {currArea && <Chart currArea={currArea} stateData={stateData} />} */}
+                      <Chart currArea={currArea} stateData={stateData} />
                     </div>
                     <div className="VotingChart">
                       {currArea && (
