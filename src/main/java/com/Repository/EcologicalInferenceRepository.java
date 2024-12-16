@@ -6,5 +6,5 @@ import com.Model.EcologicalInference;
 
 @Repository
 public interface EcologicalInferenceRepository extends MongoRepository<EcologicalInference, String>{
-    EcologicalInference findByStateIgnoreCaseAndRaceIgnoreCaseAndCandidateIgnoreCaseAndTypeIgnoreCase(String state, String race, String candidate, String type);
+    EcologicalInference findByStateIgnoreCaseAndRaceIgnoreCaseAndCandidateIgnoreCaseAndTypeIgnoreCaseAndRegionIgnoreCase(String state, String race, String candidate, String type, String region);
 }

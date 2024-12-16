@@ -16,6 +16,7 @@ const EcologicalInference = ({ stateName }) => {
   const [selectedRace, setSelectedRace] = useState("white");
   const [selectedCandidate, setSelectedCandidate] = useState("biden");
   const [selectedIncome, setSelectedIncome] = useState("poverty");
+  const [selectedRegion, setSelectedRegion] = useState("Overall"); // New state for Region Type
   const [ecoData, setEcoData] = useState(null);
 
   const races =
@@ -24,11 +25,12 @@ const EcologicalInference = ({ stateName }) => {
       : ["White", "Black", "Asian"];
   const incomeLevels = ["Poverty", "Low Income", "Middle Income", "High Income"];
   const candidates = ["Biden", "Trump"];
+  const regionTypes = ["Overall", "Rural", "Urban", "Suburban"]; // Region options
 
-  const fetchEcoData = async (raceOrIncome, display, candidate) => {
+  const fetchEcoData = async (raceOrIncome, display, candidate, region) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/ecologicalinference/${display}/${stateName}/${raceOrIncome}/${candidate}`
+        `http://localhost:8080/ecologicalinference/${display}/${stateName}/${raceOrIncome}/${candidate}/${region}`
       );
       setEcoData(response.data);
     } catch (error) {
@@ -38,8 +40,8 @@ const EcologicalInference = ({ stateName }) => {
 
   useEffect(() => {
     const criteria = selectedDisplay === "race" ? selectedRace : selectedIncome;
-    fetchEcoData(criteria, selectedDisplay, selectedCandidate);
-  }, [stateName, selectedRace, selectedDisplay, selectedCandidate, selectedIncome]);
+    fetchEcoData(criteria, selectedDisplay, selectedCandidate, selectedRegion);
+  }, [stateName, selectedRace, selectedDisplay, selectedCandidate, selectedIncome, selectedRegion]);
 
   useEffect(() => {
     const validRaces =
@@ -104,7 +106,7 @@ const EcologicalInference = ({ stateName }) => {
           : selectedRace;
       const group2Label =
         selectedDisplay === "income"
-          ? `non_${selectedIncome.replace(/_/g, " ")}`
+          ? `non_${selectedIncome.replace(/_/g, " ")}` 
           : `non_${selectedRace}`;
   
       setChartData({
@@ -145,14 +147,13 @@ const EcologicalInference = ({ stateName }) => {
     } else {
       console.warn("ecoData.data is empty or not an array");
     }
-  }, [ecoData, selectedRace, selectedIncome, selectedDisplay]);
-  
+  }, [ecoData, selectedRace, selectedIncome, selectedDisplay, selectedRegion]);
 
   return (
     <div>
       <h1>Ecological Inference</h1>
       <div>
-      <label style={{ paddingRight: "20px" }}>
+        <label style={{ paddingRight: "20px" }}>
           Display Type:
           <select value={selectedDisplay} onChange={(e) => setSelectedDisplay(e.target.value)}>
             <option value="race">Race</option>
@@ -161,7 +162,7 @@ const EcologicalInference = ({ stateName }) => {
         </label>
 
         {selectedDisplay === "race" ? (
-      <label style={{ paddingRight: "20px" }}>
+          <label style={{ paddingRight: "20px" }}>
             Race:
             <select value={selectedRace} onChange={(e) => setSelectedRace(e.target.value.toLowerCase())}>
               {races.map((race) => (
@@ -194,24 +195,36 @@ const EcologicalInference = ({ stateName }) => {
             ))}
           </select>
         </label>
+
+        {/* New Region Type Dropdown */}
+        <label>
+          Region Type:
+          <select value={selectedRegion} onChange={(e) => setSelectedRegion(e.target.value)}>
+            {regionTypes.map((region) => (
+              <option key={region} value={region}>
+                {region}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       <div className="chart-container">
         {chartData ? (
           <Plot
-          data={chartData.datasets}
-          layout={{
-            title: `Support for ${selectedCandidate.charAt(0).toUpperCase() + selectedCandidate.slice(1)}`,
-            xaxis: { title: "Vote Percentage" },
-            yaxis: { title: "Density" },
-            yaxis2: {
-              title: "Density",
-              overlaying: "y",
-              side: "right",
-            },
-            barmode: "overlay",
-            width: 1000, // Set the desired width
-          }}
+            data={chartData.datasets}
+            layout={{
+              title: `Support for ${selectedCandidate.charAt(0).toUpperCase() + selectedCandidate.slice(1)}`,
+              xaxis: { title: "Vote Percentage" },
+              yaxis: { title: "Density" },
+              yaxis2: {
+                title: "Density",
+                overlaying: "y",
+                side: "right",
+              },
+              barmode: "overlay",
+              width: 1000, // Set the desired width
+            }}
           />
         ) : (
           <p>Loading Data...</p>

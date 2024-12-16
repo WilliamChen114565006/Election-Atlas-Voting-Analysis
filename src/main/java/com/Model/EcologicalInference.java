@@ -18,4 +18,5 @@ public class EcologicalInference {
     private String candidate; 
     private List<Object> data; 
     private String type;
+    private String region;
 }
