@@ -180,26 +180,30 @@ public class ServerController {
     public ResponseEntity<Map<String, Object>> getGingles(@PathVariable String selectedDisplay, @PathVariable String state, @PathVariable String race) {
         String cacheKey;
         String cacheName = GINGLES_CACHE;
-        if (!race.equals("noRace")) {
+        // System.out.println(race);
+        System.out.println(selectedDisplay);
+        System.out.println(state);
+        // if (!race.equals("overall")) {
             cacheKey = selectedDisplay + state + race + GINGLES_CACHE_KEY_SUFFIX;
-        }
-        else{
-            cacheKey = selectedDisplay + state + GINGLES_CACHE_KEY_SUFFIX;
-        }
+        // }
+        // else{
+        //     cacheKey = selectedDisplay + state + GINGLES_CACHE_KEY_SUFFIX;
+        // }
         Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
         if(cachedData != null){
             return ResponseEntity.ok(cachedData);
         }
-        if (race.equals("noRace")) {
-            GinglesIncomeData ginglesIncomeData = ginglesIncomeRepo.findByStateIgnoreCaseAndDataIgnoreCase(state, selectedDisplay);        
-            Map<String, Object> ginglesSummary = objectMapper.convertValue(ginglesIncomeData, new TypeReference<Map<String, Object>>() {});
-            cacheHandler.putToCache(cacheKey, ginglesSummary, cacheName);
-            return ResponseEntity.ok(ginglesSummary);
-        }
+        // if (race.equals("overall")) {
+        //     System.out.println("I CAME INTO HERE BECAUSE ITS OVERALL");
+        //     GinglesIncomeData ginglesIncomeData = ginglesIncomeRepo.findByStateIgnoreCaseAndDataIgnoreCase(state, selectedDisplay);        
+        //     Map<String, Object> ginglesSummary = objectMapper.convertValue(ginglesIncomeData, new TypeReference<Map<String, Object>>() {});
+        //     cacheHandler.putToCache(cacheKey, ginglesSummary, cacheName);
+        //     return ResponseEntity.ok(ginglesSummary);
+        // }
 
         // System.out.println("I GET TO HERE AT LEAST");
         // System.out.println(state);
-        // System.out.println(selectedDisplay);
+        // System.out.println(selectedDisplay); 
         GinglesData ginglesData = ginglesRepo.findByStateIgnoreCaseAndDataIgnoreCaseAndRaceIgnoreCase(state, selectedDisplay, race);
         // System.out.println(ginglesData);
         Map<String, Object> ginglesSummary = objectMapper.convertValue(ginglesData, new TypeReference<Map<String, Object>>() {});

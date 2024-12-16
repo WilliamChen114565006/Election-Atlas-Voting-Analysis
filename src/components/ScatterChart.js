@@ -8,8 +8,10 @@ ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 export default function ScatterPlot({ stateName }) {
   const [selectedRace, setSelectedRace] = useState("white");
   const [selectedDisplay, setSelectedDisplay] = useState("race");
+  const [selectedRegion, setSelectedRegion] = useState("Overall"); // Add state for region type
   const [ginglesData, setGinglesData] = useState(null);
   const races = ["White", "Black", "Asian", "Native", "Pacific", "Other"];
+  const regions = ["Overall","Rural", "Urban", "Suburban"]; // Region options
 
   const fetchGinglesData = async (race, display) => {
     try {
@@ -23,7 +25,7 @@ export default function ScatterPlot({ stateName }) {
   };
 
   useEffect(() => {
-      fetchGinglesData(selectedRace, selectedDisplay);
+    fetchGinglesData(selectedRace, selectedDisplay);
   }, [stateName, selectedRace, selectedDisplay]);
 
   const handleRaceChange = (event) => {
@@ -35,9 +37,17 @@ export default function ScatterPlot({ stateName }) {
     if (event.target.value === "race") {
       setSelectedRace("white");
     } else if (event.target.value === "income") {
-      setSelectedRace("noRace");
+      setSelectedRace(selectedRegion.toLowerCase());
     } else if (event.target.value === "income_race") {
       setSelectedRace("white");
+    }
+  };
+
+  const handleRegionChange = (event) => {
+    const selectedRegionType = event.target.value;
+    setSelectedRegion(selectedRegionType);
+    if (selectedDisplay === "income") {
+      setSelectedRace(selectedRegionType.toLowerCase());
     }
   };
 
@@ -105,7 +115,7 @@ export default function ScatterPlot({ stateName }) {
       x: {
         title: {
           display: true,
-          text: 
+          text:
             selectedDisplay === "income"
               ? "Income"
               : selectedDisplay === "income_race"
@@ -155,25 +165,42 @@ export default function ScatterPlot({ stateName }) {
   return (
     <div>
       <h3>Precinct-by-Precinct Voting and Demographic Analysis</h3>
-      <label htmlFor="display-select" style={{ fontSize: "20px"}}>Select Display:</label>
+      <label htmlFor="display-select" style={{ fontSize: "20px" }}>Select Display:</label>
       <select
         id="display-select"
         value={selectedDisplay}
         onChange={handleDisplayChange}
-        style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "19px"}}
+        style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "19px" }}
       >
         <option value="race">Race</option>
         <option value="income">Income</option>
         <option value="income_race">Income/Race</option>
       </select>
+      {selectedDisplay === "income" && (
+        <label htmlFor="region-select" style={{ marginLeft: "20px", fontSize: "20px" }}>Select Region:</label>
+      )}
+      {selectedDisplay === "income" && (
+        <select
+          id="region-select"
+          value={selectedRegion}
+          onChange={handleRegionChange}
+          style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "19px" }}
+        >
+          {regions.map((region, index) => (
+            <option key={index} value={region.toLowerCase()}>
+              {region}
+            </option>
+          ))}
+        </select>
+      )}
       {selectedDisplay !== "income" && (
         <>
-          <label htmlFor="race-select" style={{ marginLeft: "20px", fontSize: "20px"}}>Select Race:</label>
+          <label htmlFor="race-select" style={{ marginLeft: "20px", fontSize: "20px" }}>Select Race:</label>
           <select
             id="race-select"
             value={selectedRace}
             onChange={handleRaceChange}
-            style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "19px"}}
+            style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "19px" }}
           >
             {races.map((race, index) => (
               <option key={index} value={race}>
