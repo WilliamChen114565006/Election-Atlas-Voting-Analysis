@@ -57,10 +57,10 @@ const VotingChart = ({ currArea, stateData }) => {
 
   return (
     <div>
-      <div>
+      {/* <div>
         <strong>Total Votes: </strong>
         {totalVotes.toLocaleString()}
-      </div>
+      </div> */}
       <div className="chart-container">
         {chartData ? (
           <Bar
@@ -77,7 +77,7 @@ const VotingChart = ({ currArea, stateData }) => {
                   font: {
                     size: 18,
                     family: 'Open Sans',
-                    weight: '100%',
+                    weight: '700',
                   },
                 },
                 legend: {
@@ -133,6 +133,10 @@ const VotingChart = ({ currArea, stateData }) => {
         ) : (
           <p>Loading chart data...</p>
         )}
+      </div>
+      <div>
+        <strong>Total Votes: </strong>
+        {totalVotes.toLocaleString()}
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ export default function RegionChart({ currArea, stateData}){
                 font: {
                   size: 18, 
                   family: 'Open Sans',
-                  weight: '100%', 
+                  weight: '700', 
                 }
             },
             legend: {
@@ -93,10 +93,11 @@ export default function RegionChart({ currArea, stateData}){
 
     return (
         <div>
-        <div className='Total'> <strong>Total Precincts: </strong>  {stateData.total_precincts.toLocaleString()}</div>
+        {/* <div className='Total'> <strong>Total Precincts: </strong>  {stateData.total_precincts.toLocaleString()}</div> */}
         <div className='chart-container'>
             <Bar data={chartData} options={chartOptions} height={'45%'} width={'100%'}/>
         </div>
+        <div className='Total'> <strong>Total Precincts: </strong>  {stateData.total_precincts.toLocaleString()}</div>
         </div>
     );
 

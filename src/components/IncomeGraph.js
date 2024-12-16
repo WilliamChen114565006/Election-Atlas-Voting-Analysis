@@ -74,9 +74,9 @@ const IncomeChart = ({ currArea, currState, stateData }) => {
 
   return (
     <div>
-      <div className="Total">
+      {/* <div className="Total">
         <strong>Total Households: </strong>{totalHouseholds.toLocaleString()}
-      </div>
+      </div> */}
       <div className="chart-container">
         {chartData ? (
           <Bar
@@ -93,7 +93,7 @@ const IncomeChart = ({ currArea, currState, stateData }) => {
                   font: {
                     size: 18,
                     family: 'Open Sans',
-                    weight: '100%',
+                    weight: '700',
                   },
                 },
                 legend: {
@@ -145,6 +145,9 @@ const IncomeChart = ({ currArea, currState, stateData }) => {
         ) : (
           <p>Loading chart data...</p>
         )}
+      </div>
+      <div className="Total">
+        <strong>Total Households: </strong>{totalHouseholds.toLocaleString()}
       </div>
     </div>
   );

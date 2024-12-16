@@ -69,10 +69,10 @@ const PopulationChart = ({ currArea, stateData }) => {
 
   return (
     <div>
-      <div>
+      {/* <div>
         <strong>Total Population: </strong>
         {totalPopulation.toLocaleString()}
-      </div>
+      </div> */}
       <div className="chart-container">
         {chartData ? (
           <Bar
@@ -89,7 +89,7 @@ const PopulationChart = ({ currArea, stateData }) => {
                   font: {
                     size: 18,
                     family: 'Open Sans',
-                    weight: '100%',
+                    weight: '700',
                   },
                 },
                 legend: {
@@ -145,6 +145,10 @@ const PopulationChart = ({ currArea, stateData }) => {
         ) : (
           <p>Loading chart data...</p>
         )}
+      </div>
+      <div>
+        <strong>Total Population: </strong>
+        {totalPopulation.toLocaleString()}
       </div>
     </div>
   );
