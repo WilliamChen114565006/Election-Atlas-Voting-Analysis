@@ -201,7 +201,7 @@ public class ServerController {
         // System.out.println(state);
         // System.out.println(selectedDisplay);
         GinglesData ginglesData = ginglesRepo.findByStateIgnoreCaseAndDataIgnoreCaseAndRaceIgnoreCase(state, selectedDisplay, race);
-        System.out.println(ginglesData);
+        // System.out.println(ginglesData);
         Map<String, Object> ginglesSummary = objectMapper.convertValue(ginglesData, new TypeReference<Map<String, Object>>() {});
         cacheHandler.putToCache(cacheKey, ginglesSummary, cacheName);
         return ResponseEntity.ok(ginglesSummary);

@@ -12,10 +12,17 @@ export default function BoxWhiskerPlot({ stateName }) {
   const [incomeGroup, setIncomeGroup] = useState("Low Income");
   const [regionType, setRegionType] = useState("Rural");
   const displayCategory = ["Race", "Income", "Region"];
-  const raceGroups = ["White", "Black", "Asian"];
   const incomeGroups = ["Low Income", "Medium Income", "High Income"];
   const regionTypes = ["Rural", "Suburban", "Urban"];
-  
+
+  let raceGroups = [];
+  if(stateName == "Louisiana"){
+    raceGroups = ["White", "Black"];
+  }
+  if(stateName == "New Jersey"){
+    raceGroups = ["White", "Black", "Asian"];
+  }
+
   const stateNameWithSpace = stateName;
   stateName = stateName.replace(/ /g, "_");
 
