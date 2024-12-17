@@ -226,16 +226,16 @@ public class ServerController {
         return ResponseEntity.ok(jsonMap);
     }
 
-    @GetMapping("/ecologicalinference/{selectedDisplay}/{state}/{race}/{candidate}")
-    public ResponseEntity<Map<String, Object>> getEcologicalInference(@PathVariable String selectedDisplay, @PathVariable String state, @PathVariable String race, @PathVariable String candidate) throws IOException {
+    @GetMapping("/ecologicalinference/{selectedDisplay}/{state}/{race}/{candidate}/{region}")
+    public ResponseEntity<Map<String, Object>> getEcologicalInference(@PathVariable String selectedDisplay, @PathVariable String state, @PathVariable String race, @PathVariable String candidate, @PathVariable String region) throws IOException {
         String cacheKey;
         String cacheName = ECOINFERENCE_CACHE;
-        cacheKey = selectedDisplay + state + race + candidate + ECOINFERENCE_CACHE_KEY_SUFFIX;
+        cacheKey = selectedDisplay + state + race + candidate + region + ECOINFERENCE_CACHE_KEY_SUFFIX;
         Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
         if (cachedData != null) {
             return ResponseEntity.ok(cachedData);
         }
-        EcologicalInference ecoData= EcoInferenceRepo.findByStateIgnoreCaseAndRaceIgnoreCaseAndCandidateIgnoreCaseAndTypeIgnoreCase(state, race, candidate, selectedDisplay);
+        EcologicalInference ecoData= EcoInferenceRepo.findByStateIgnoreCaseAndRaceIgnoreCaseAndCandidateIgnoreCaseAndTypeIgnoreCaseAndRegionIgnoreCase(state, race, candidate, selectedDisplay,region);
         Map<String, Object> jsonEco = objectMapper.convertValue(ecoData, new TypeReference<Map<String, Object>>() {});
         cacheHandler.putToCache(cacheKey, jsonEco, cacheName);
         return ResponseEntity.ok(jsonEco);

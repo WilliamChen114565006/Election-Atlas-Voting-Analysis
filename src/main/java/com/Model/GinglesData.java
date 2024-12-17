@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +19,6 @@ public class GinglesData {
     private String data;
     private String race;
     private List<String> fields;
-    private List<List<Double>> precincts;
+    private Map<String,Object> precincts;
     private List<List<Double>> regression_points;
 }
