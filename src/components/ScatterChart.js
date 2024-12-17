@@ -229,7 +229,7 @@ export default function ScatterPlot({ stateName}) {
           </select>
           {selectedDisplay !== "income" && (
             <>
-              <label htmlFor="race-select">Select Race:</label>
+              <label style={{ paddingLeft: "20px" }} htmlFor="race-select">Select Race:</label>
               <select id="race-select" value={selectedRace} onChange={handleRaceChange}>
                 {races.map((race) => (
                   <option key={race} value={race.toLowerCase()}>
@@ -241,7 +241,7 @@ export default function ScatterPlot({ stateName}) {
           )}
           {selectedDisplay === "income" && (
             <>
-              <label htmlFor="region-select">Select Region:</label>
+              <label style={{ paddingLeft: "20px" }} htmlFor="region-select">Select Region:</label>
               <select id="region-select" value={selectedRegion} onChange={handleRegionChange}>
                 {regions.map((region) => (
                   <option key={region} value={region.toLowerCase()}>
@@ -258,7 +258,7 @@ export default function ScatterPlot({ stateName}) {
       </div>
       {showTable ? (
         <div style={{ maxHeight: '500px', overflowY: 'auto', marginTop: '20px' }}>
-          <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table border="1" style={{width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ position: 'sticky', top: 0, backgroundColor: '#f1f1f1', zIndex: 1 }}>
                 <th>Precinct</th>

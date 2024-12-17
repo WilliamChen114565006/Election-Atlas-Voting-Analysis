@@ -19,4 +19,5 @@ public class BoxAndWhiskerLAModel {
     private Map<String, Object> Asian;
     private Map<String, Object> Native;
     private Map<String, Object> Pacific;
+    private Map<String, Object> Other;
 }

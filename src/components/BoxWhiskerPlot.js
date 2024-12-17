@@ -40,9 +40,9 @@ export default function BoxWhiskerPlot({ stateName }) {
     console.log(regionTypeForRace);
     try {
       const response = await axios.get(`http://localhost:8080/box-and-whisker/${stateName}/${displayCategory}/${regionTypeForRace}`);
-      console.log(response.data);
+      //console.log(response.data);
       if(displayCategory == "Race"){
-        // console.log(response.data);
+        //console.log(response.data);
         setRaceData(response.data);
         let modifiedString = raceGroup.charAt(0).toLowerCase() + raceGroup.slice(1);
         updatePlot(response.data, modifiedString, stateNameWithSpace); 
@@ -66,6 +66,7 @@ export default function BoxWhiskerPlot({ stateName }) {
   };
 
   const updatePlot = (data, category, stateName, regionTypeForRace) => {
+    //console.log(data[category]);
     const selectedRaceData = data[category];
     if (!selectedRaceData) {
       console.error("Invalid category:", category);
@@ -119,7 +120,7 @@ export default function BoxWhiskerPlot({ stateName }) {
     setPlotData([...boxTraces, recomTrace, scatterTrace]);
 
     let modifiedString = null;
-    if(category == "white" || category == "black" || category == "asian" || category == "native" || category == "pacific" ){
+    if(category == "white" || category == "black" || category == "asian" || category == "native" || category == "pacific" || category == "other" ){
       modifiedString = category.charAt(0).toUpperCase() + category.slice(1);
     }
     else{

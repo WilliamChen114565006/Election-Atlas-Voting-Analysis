@@ -162,7 +162,7 @@ const EcologicalInference = ({ stateName }) => {
         </label>
 
         {selectedDisplay === "race" ? (
-          <label style={{ paddingRight: "20px" }}>
+          <label>
             Race:
             <select value={selectedRace} onChange={(e) => setSelectedRace(e.target.value.toLowerCase())}>
               {races.map((race) => (
@@ -185,7 +185,7 @@ const EcologicalInference = ({ stateName }) => {
           </label>
         )}
 
-        <label>
+        <label style={{ paddingLeft: "20px" }}>
           Candidate:
           <select value={selectedCandidate} onChange={(e) => setSelectedCandidate(e.target.value.toLowerCase())}>
             {candidates.map((candidate) => (
@@ -197,7 +197,7 @@ const EcologicalInference = ({ stateName }) => {
         </label>
 
         {/* New Region Type Dropdown */}
-        <label>
+        <label style={{ paddingLeft: "20px" }}>
           Region Type:
           <select value={selectedRegion} onChange={(e) => setSelectedRegion(e.target.value)}>
             {regionTypes.map((region) => (
