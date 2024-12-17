@@ -111,8 +111,8 @@ const IncomeChart = ({ currArea, currState, stateData, precinctsDataLA, precinct
       <div className="chart-container">
         {chartData ? (
           <Bar
-            height={'45%'} // Set height in pixels
-            width={'100%'} // Set width in pixels
+            height={currArea === currState ? '45%' : '10%'} // Height changes based on condition
+            width={currArea === currState ? '100%' : '50%'} // Width changes based on condition
             data={chartData}
             options={{
               responsive: true,

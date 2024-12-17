@@ -736,10 +736,15 @@ path.leaflet-interactive:focus {
   gap: 50px; /* Adds spacing between divs (optional) */
 }
 
-.IncomeChart, .RegionChart {
+/*.IncomeChart{
   width: 46%;
   margin-top: 20px;
-  /* margin-left: 25%; */
+  // margin-left: 25%; 
+}*/
+
+.RegionChart {
+  width: 46%;
+  margin-top: 20px;
 }
 
 #ensembleTableDiv{
