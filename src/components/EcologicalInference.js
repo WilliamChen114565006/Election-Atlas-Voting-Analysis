@@ -215,8 +215,8 @@ const EcologicalInference = ({ stateName }) => {
             data={chartData.datasets}
             layout={{
               title: `Support for ${selectedCandidate.charAt(0).toUpperCase() + selectedCandidate.slice(1)}`,
-              xaxis: { title: "Vote Percentage" },
-              yaxis: { title: "Density" },
+              xaxis: { title: "Group Vote Percentage" },
+              yaxis: { title: "Probability Density" },
               yaxis2: {
                 title: "Density",
                 overlaying: "y",

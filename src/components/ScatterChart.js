@@ -18,7 +18,7 @@ export default function ScatterPlot({ stateName}) {
   const regions = ["Overall", "Rural", "Urban", "Suburban"];
 
   const stateRaceMap = {
-    Louisiana: ["White", "Black", "Other", "Blacktest", "Blacktest2"],
+    Louisiana: ["White", "Black", "Other"],
     NJ: ["White", "Black", "Asian"],
   };
 
@@ -257,7 +257,7 @@ export default function ScatterPlot({ stateName}) {
         </button>
       </div>
       {showTable ? (
-        <div style={{ maxHeight: '625px', overflowY: 'auto', marginTop: '20px' }}>
+        <div style={{ maxHeight: '500px', overflowY: 'auto', marginTop: '20px' }}>
           <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ position: 'sticky', top: 0, backgroundColor: '#f1f1f1', zIndex: 1 }}>
