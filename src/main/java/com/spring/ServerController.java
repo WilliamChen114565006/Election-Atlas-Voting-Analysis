@@ -136,12 +136,12 @@ public class ServerController {
 
     @GetMapping("/box-and-whisker/{state}/{type}/{regionForRace}")
     public ResponseEntity<Map<String, Object>> getBoxAndWhisker(@PathVariable String state, @PathVariable String type, @PathVariable String regionForRace) throws IOException {
-        String cacheKey=state+type+regionForRace+BW_KEY_SUFFIX;
-        String cacheName=BW_CACHE;
-        Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
-        if (cachedData != null) {
-            return ResponseEntity.ok(cachedData);
-        }
+        // String cacheKey=state+type+regionForRace+BW_KEY_SUFFIX;
+        // String cacheName=BW_CACHE;
+        // Map<String, Object> cachedData = cacheHandler.getFromCache(cacheKey, cacheName);
+        // if (cachedData != null) {
+        //     return ResponseEntity.ok(cachedData);
+        // }
 
         Map<String, Object> jsonData = null;
         if(type.equals("Race")){
@@ -158,7 +158,7 @@ public class ServerController {
         }
         jsonData.remove("state");
         jsonData.remove("type");
-        cacheHandler.putToCache(cacheKey, jsonData, cacheName);
+        //cacheHandler.putToCache(cacheKey, jsonData, cacheName);
         return ResponseEntity.ok(jsonData);
     }
 
