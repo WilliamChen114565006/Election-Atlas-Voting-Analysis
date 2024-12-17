@@ -186,13 +186,13 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
                     </div>
                   </div>
                   <div className="DoubleContainer">
-                    <div className="IncomeChart">
+                    <div className="IncomeChart" style={{width: currArea === stateName ? '46%' : '100%', marginTop: '20px'}}>
                       {currArea && (
                         <IncomeChart currArea={currArea} currState={currState} stateData={stateData} precinctsDataLA={precinctsDataLA} precinctsDataNJ={precinctsDataNJ} />
                       )}
                     </div>
-                    <div className="RegionChart">
-                      {currArea && <RegionChart currArea={currArea} stateData={stateData} />}
+                    <div className="RegionChart" style={{width: currArea === stateName ? '46%' : '0%', marginTop: '20px'}}>
+                      {currArea === stateName && <RegionChart currArea={currArea} stateData={stateData} />}
                     </div>
                   </div>
                   {isPopupVisibleReps && (
