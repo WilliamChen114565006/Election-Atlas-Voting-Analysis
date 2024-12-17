@@ -634,7 +634,10 @@ const getPrecinctVoteMarginStyle=(feature)=>{
     partyColor=0;
   }
 
-  if(marginDiff < 5){
+  if (marginDiff === 0){
+    hueColor="100%";
+  }
+  else if(marginDiff < 5){
     hueColor="75%";
   }
   else if(marginDiff < 10){

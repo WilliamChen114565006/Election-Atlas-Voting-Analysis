@@ -138,7 +138,7 @@ export default function BoxWhiskerPlot({ stateName }) {
       },
       xaxis: {
         title: {
-          text: "Districts",
+          text: "Indexed Districts",
           font: {
             size: 18, // Adjust font size as needed
           },

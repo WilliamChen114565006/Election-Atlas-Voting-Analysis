@@ -76,6 +76,10 @@ export default function Legend({ isVisible, legendColor, colors }) {
           <h4>Voting Margin Trump</h4>
           <ul className="legend-list">
               <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 0.00%, 0.00%)' }}></span>
+                Tie / No Data
+              </li>
+              <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 20%)' }}></span>
                  {'>'}30%
               </li>
@@ -95,15 +99,15 @@ export default function Legend({ isVisible, legendColor, colors }) {
                 <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 75%)' }}></span>
                 {'<'}5%
               </li>
-              <li>
-                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 0.00%, 0.00%)' }}></span>
-                Tie / No Data
-              </li>
           </ul>
         </div>
         <div className="legend-container-3">
           <h4>Voting Margin Biden</h4>
           <ul className="legend-list">
+          <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 0.00%, 0.00%)' }}></span>
+                Tie / No Data
+              </li>
           <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 20%)' }}></span>
                 {'>'}30%
@@ -123,10 +127,6 @@ export default function Legend({ isVisible, legendColor, colors }) {
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 75%)' }}></span>
                 {'<'}5%
-              </li>
-              <li>
-                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 0.00%, 0.00%)' }}></span>
-                Tie / No Data
               </li>
           </ul>
         </div>
