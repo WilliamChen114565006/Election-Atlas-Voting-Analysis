@@ -44,17 +44,17 @@ export default function App() {
   const [isMinimized, setMinimizeSidebar] = useState(false);
   const [currArea, setCurrArea] = useState(null);
   const [fakecurrArea, setFakeCurrArea] = useState(null)
-  const[isLegendVisible, setLegendVisible] = useState(false);
+  const [isLegendVisible, setLegendVisible] = useState(false);
   const [allVoteData2, setAllVoteData2] = useState([]);
   const [minorityDensityDataLA, setMinorityDensityDataLA] = useState([]);
-  const[isIncomeLegend, setIncomeLegend]=useState("district");
+  const [isIncomeLegend, setIncomeLegend]=useState("district");
   const [isAllIncomeData, setisAllIncomeData] = useState([]);
   const [isAllIncomeData2, setisAllIncomeData2] = useState([]);
   const [minorityDensityDataNJ, setMinorityDensityDataNJ] = useState([]);
   const [colors, setColors] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [race, setRace] = useState("white");
-  const[reset, setReset] = useState("false");
+  const [reset, setReset] = useState("false");
 
   const StateEnum = Object.freeze({
     LOUISIANA: 'louisiana',
