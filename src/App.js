@@ -619,6 +619,48 @@ const getPrecinctBlackStyle = (feature) => {
   };
 };
 
+//VOTE MARGIN PRECINCT STYLE
+const getPrecinctVoteMarginStyle=(feature)=>{
+  let partyColor=0;
+  let hueColor=100;
+  let total=feature.properties.G20PREDBID+feature.properties.G20PRERTRU;
+  const marginDiff= ((Math.abs(feature.properties.G20PREDBID-feature.properties.G20PRERTRU))/(total))*100;
+  if(feature.properties.G20PREDBID > feature.properties.G20PRERTRU)
+  {
+    partyColor=240;
+  }
+  else
+  {
+    partyColor=0;
+  }
+
+  if(marginDiff < 5){
+    hueColor="75%";
+  }
+  else if(marginDiff < 10){
+    hueColor="60%";
+  }
+  else if(marginDiff < 15){
+    hueColor="45%";
+  }
+  else if(marginDiff < 30){
+    hueColor="30%";
+  }
+  else if(marginDiff >= 30){
+    hueColor="15%";
+  }
+
+  const adjustedColor = `hsl(${partyColor}, 100%, ${hueColor})`; 
+  return {
+    fillColor: adjustedColor || '#ffffff',
+    color: '#000000',
+    weight: 0.5,
+    opacity: 1,
+    fillOpacity: highlightedFeature === feature ? 0.7 : 0.8,
+  };
+
+}
+
 //VOTING PRECINCT STYLE
   const getPrecinctStyle = (feature) => {
     let partyColor=0;
@@ -1136,6 +1178,7 @@ const onEachPrecinctFeature = (feature, layer) => {
             isIncomeLegend === "race" ? getPrecinctBlackStyle : 
             isIncomeLegend === "region" ? getPrecinctRegionStyle :
             isIncomeLegend === "poverty" ? getPrecinctPovertyStyle :
+            isIncomeLegend === "margin" ? getPrecinctVoteMarginStyle :
             isIncomeLegend === "income" ? getPrecinctIncomeStyle : null
           } 
           onEachFeature={onEachPrecinctFeature}/>
@@ -1145,6 +1188,7 @@ const onEachPrecinctFeature = (feature, layer) => {
             isIncomeLegend === "race" ? getPrecinctBlackStyle: 
             isIncomeLegend === "region" ? getPrecinctRegionStyle :
             isIncomeLegend === "poverty" ? getPrecinctPovertyStyle :
+            isIncomeLegend === "margin" ? getPrecinctVoteMarginStyle :
             isIncomeLegend === "income" ? getPrecinctIncomeStyle: null
           } 
           onEachFeature={onEachPrecinctFeature} />

@@ -96,6 +96,19 @@ body, html {
   text-align: center;
 }
 
+#marginbutton{
+  font-family: "Open Sans";
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: white;
+  border-radius: 5px ;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-right: 5px;
+  padding-right: 1.5%;
+  text-align: center;
+}
+
 #povertybutton{
   font-family: "Open Sans";
   font-weight: bold;
@@ -163,7 +176,7 @@ body, html {
   position: relative; /* Make it relative to position the pseudo-element */
 }
 
-#votingbutton.active, #racebutton.active, #incomebutton.active, #regionbutton.active, #povertybutton.active{
+#votingbutton.active, #racebutton.active, #incomebutton.active, #regionbutton.active, #povertybutton.active, #marginbutton.active{
   background-color: green;
   color: white;
 }
@@ -236,6 +249,24 @@ body, html {
 }
 
 .legend-container-2 h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.legend-container-3 {
+  position: absolute;
+  bottom: 20px;
+  right: 220px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-family: Arial, sans-serif;
+}
+
+.legend-container-3 h4 {
   margin: 0 0 10px;
   font-size: 14px;
   font-weight: bold;

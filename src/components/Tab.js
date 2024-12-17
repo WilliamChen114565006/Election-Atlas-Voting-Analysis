@@ -29,6 +29,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
     else if (buttonId === 'incomebutton') changeLegendColor2("income");
     else if (buttonId === "regionbutton") changeLegendColor2("region");
     else if (buttonId === "povertybutton") changeLegendColor2("poverty");
+    else if (buttonId === "marginbutton") changeLegendColor2("margin");
     setSelectedRaceOption("");
   };
 
@@ -84,6 +85,14 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
           disabled={isDistrictActive}
         >
           Voting
+        </button>
+        <button
+          id="marginbutton"
+          className={`${activeLegendButton === 'marginbutton' ? 'active' : ''} ${isDistrictActive ? 'disabled' : ''}`}
+          onClick={() => handleLegendButtonClick('marginbutton')}
+          disabled={isDistrictActive}
+        >
+          Voting Margin
         </button>
 
         <select

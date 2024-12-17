@@ -69,6 +69,71 @@ export default function Legend({ isVisible, legendColor, colors }) {
     );
       
   }
+  if(legendColor === "margin"){
+    return(
+    <>
+        <div className="legend-container">
+          <h4>Voting Margin Trump</h4>
+          <ul className="legend-list">
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 20%)' }}></span>
+                 {'>'}30%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 30%)' }}></span>
+                15%-30%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 45%)' }}></span>
+                10%-30%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 60%)' }}></span>
+                5%-10%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 75%)' }}></span>
+                {'<'}5%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 0.00%, 0.00%)' }}></span>
+                Tie / No Data
+              </li>
+          </ul>
+        </div>
+        <div className="legend-container-3">
+          <h4>Voting Margin Biden</h4>
+          <ul className="legend-list">
+          <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 20%)' }}></span>
+                {'>'}30%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 30%)' }}></span>
+                15%-30%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 45%)' }}></span>
+                10%-15%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 60%)' }}></span>
+                5%-10%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 75%)' }}></span>
+                {'<'}5%
+              </li>
+              <li>
+                <span className="legend-color" style={{ backgroundColor: 'hsl(0, 0.00%, 0.00%)' }}></span>
+                Tie / No Data
+              </li>
+          </ul>
+        </div>
+      </>
+    );
+      
+  }
   else if(legendColor === "district"){
     return(
       <div className="legend-container">
