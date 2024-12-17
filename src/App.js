@@ -398,17 +398,25 @@ const handlePrecinctsClickNJ = () => {
 };
 
 //DISTRICT VOTING COLORS
-  const getFeatureStyle = (feature) => {
-    const party = feature.properties.party;
-    const partyColor = colors[party] || '#ffffff';
-    return {
-      fillColor: partyColor,
-      color: '#000000',
-      weight: 0.5,
-      opacity: 1,
-      fillOpacity: highlightedFeature === feature ? 0.7 : 0.5,
-    };
+const getFeatureStyle = (feature) => {
+  const party = feature.properties.winning_party;
+  
+  // Capitalize the first letter of the party string
+  const capitalizedParty = party
+    ? party.charAt(0).toUpperCase() + party.slice(1).toLowerCase()
+    : '';
+
+  const partyColor = colors[capitalizedParty] || '#ffffff';
+
+  return {
+    fillColor: partyColor,
+    color: '#000000',
+    weight: 0.5,
+    opacity: 1,
+    fillOpacity: highlightedFeature === feature ? 0.7 : 0.5,
   };
+};
+
 
   const getDistrictLAStyleIncome = (feature) => {
     let districtName = feature.properties.name;
@@ -588,26 +596,16 @@ const getPrecinctBlackStyle = (feature) => {
   const blackPercent = (racePopulation / TOT_POP) * 100;
 
   let color = "";
-  if (blackPercent > 91) {
-      color = "90%-100%";
-  } else if (blackPercent > 81) {
-      color = "80%-90%";
-  } else if (blackPercent > 71) {
-      color = "70%-80%";
-  } else if (blackPercent > 61) {
-      color = "60%-70%";
-  } else if (blackPercent > 51) {
-      color = "50%-60%";
-  } else if (blackPercent > 41) {
-      color = "40%-50%";
-  } else if (blackPercent > 31) {
-      color = "30%-40%";
-  } else if (blackPercent > 21) {
-      color = "20%-30%";
-  } else if (blackPercent > 11) {
-      color = "10%-20%";
+  if (blackPercent > 80) {
+      color = "80%-100%";
+  } else if (blackPercent > 60) {
+      color = "60%-80%";
+  } else if (blackPercent > 40) {
+      color = "40%-60%";
+  } else if (blackPercent > 20) {
+      color = "20%-40%";
   } else {
-      color = "0%-10%";
+      color = "0%-20%";
   }
 
   let raceColor=colors[color];
@@ -668,23 +666,23 @@ const getPrecinctBlackStyle = (feature) => {
 const getPrecinctIncomeStyle = (feature) => {
   const { AVG_INC } = feature.properties;
   let color ="";
-  if (AVG_INC < 20000){
-    color = "10k-20k";
-  }
-  else if(AVG_INC < 35000){
-    color = "20k-35k";
+  if (AVG_INC < 25000){
+    color = ">25k";
   }
   else if(AVG_INC < 50000){
-    color = "35k-50k";
+    color = "25k-50k";
   }
-  else if(AVG_INC < 100000){
-    color = "50k-100k";
+  else if(AVG_INC < 75000){
+    color = "50k-75k";
   }
-  else if(AVG_INC < 200000){
-    color = "100k-200k";
+  else if(AVG_INC < 125000){
+    color = "75k-125k";
   }
-  else if(AVG_INC >= 200000){
-    color = "200k+";
+  else if(AVG_INC < 150000){
+    color = "125k-150k";
+  }
+  else if(AVG_INC >= 150000){
+    color = "150k+";
   }
 
   const fillColor = colors[color] || 'white';  
@@ -693,7 +691,7 @@ const getPrecinctIncomeStyle = (feature) => {
     color: '#000000',
     weight: 0.5,
     opacity: 1,
-    fillOpacity: 0.6,
+    fillOpacity: highlightedFeature === feature ? 0.5 : 0.85,
   };
 
 }
@@ -707,7 +705,7 @@ const getPrecinctRegionStyle = (feature) =>{
       color: '#000000',
       weight: 0.5,
       opacity: 1,
-      fillOpacity: highlightedFeature === feature ? 0.7 : 0.8,
+      fillOpacity: highlightedFeature === feature ? 0.5 : 0.8,
     };
 }
 
@@ -716,26 +714,16 @@ const getPrecinctPovertyStyle = (feature) =>{
     const { poverty_fraction }=feature.properties;
     const poverty_percentage=poverty_fraction*100;
     let color="";
-    if (poverty_percentage > 91) {
-      color = "90%-100%";
-  } else if (poverty_percentage > 81) {
-      color = "80%-90%";
-  } else if (poverty_percentage > 71) {
-      color = "70%-80%";
-  } else if (poverty_percentage > 61) {
-      color = "60%-70%";
-  } else if (poverty_percentage > 51) {
-      color = "50%-60%";
-  } else if (poverty_percentage > 41) {
-      color = "40%-50%";
-  } else if (poverty_percentage > 31) {
-      color = "30%-40%";
-  } else if (poverty_percentage > 21) {
-      color = "20%-30%";
-  } else if (poverty_percentage > 11) {
-      color = "10%-20%";
+    if (poverty_percentage > 80) {
+      color = "80%-100%";
+  } else if (poverty_percentage > 60) {
+      color = "60%-80%";
+  } else if (poverty_percentage > 40) {
+      color = "40%-60%";
+  } else if (poverty_percentage > 20) {
+      color = "20%-40%";
   } else {
-      color = "0%-10%";
+      color = "0%-20%";
   }
   let povertyColor=colors[color];
 
@@ -744,10 +732,9 @@ const getPrecinctPovertyStyle = (feature) =>{
     weight: 0.5,
     opacity: 1,
     color: "black",
-    fillOpacity: highlightedFeature === feature ? 0.5 : 0.7,
+    fillOpacity: highlightedFeature === feature ? 0.5 : 0.88,
 };
 }
-
 
   const defaultStateStyle = (feature) => ({
     fillColor: '#ffffff',
@@ -762,8 +749,8 @@ const getPrecinctPovertyStyle = (feature) =>{
       mouseover: () => {
         setHighlightedFeature(feature);
         
-        if (feature.properties.DISTRICT) {
-          setFakeCurrArea('District ' + feature.properties.DISTRICT);
+        if (feature.properties.NAME) {
+          setFakeCurrArea(feature.properties.NAME);
         } 
         if (feature.properties.name) {
           setFakeCurrArea(feature.properties.name.replace("Congressional", "").trim());
@@ -783,15 +770,15 @@ const getPrecinctPovertyStyle = (feature) =>{
           handleSelection('newjersey');
         }
 
-        if (feature.properties.DISTRICT) {
-          setCurrArea('District ' + feature.properties.DISTRICT);
+        if (feature.properties.NAME) {
+          setCurrArea(feature.properties.NAME);
         } 
         if (feature.properties.name) {
           setCurrArea(feature.properties.name.replace("Congressional", "").trim());
         }
 
-        if (feature.properties.DISTRICT) {
-          setCurrArea('District ' + feature.properties.DISTRICT);
+        if (feature.properties.NAME) {
+          setCurrArea(feature.properties.NAME);
         }
         if (feature.properties.name) {
           setCurrArea(feature.properties.name.replace("Congressional", "").trim());
@@ -850,8 +837,8 @@ const onEachPrecinctFeature = (feature, layer) => {
           if(feature.properties.MUN_NAME){
             setFakeCurrArea(feature.properties.MUN_NAME + " " + feature.properties.WARD_CODE + " " + feature.properties.ELECD_CODE);
           }
-          else if(feature.properties.PRECINCT){
-            setFakeCurrArea(feature.properties.PRECINCT);
+          else if(feature.properties.NAME){
+            setFakeCurrArea(feature.properties.NAME);
           }
       },
       mouseout: () => {
@@ -863,8 +850,8 @@ const onEachPrecinctFeature = (feature, layer) => {
         if(feature.properties.MUN_NAME){
           setCurrArea(feature.properties.MUN_NAME + " " + feature.properties.WARD_CODE + " " + feature.properties.ELECD_CODE);
         } 
-        else if(feature.properties.PRECINCT){
-          setCurrArea(feature.properties.PRECINCT);
+        else if(feature.properties.NAME){
+          setCurrArea(feature.properties.NAME);
         }
       },
   });
@@ -1073,6 +1060,10 @@ const onEachPrecinctFeature = (feature, layer) => {
     {isInfoVisible && (
       <InfoPanel 
       stateName={selectedState}
+      precinctsDataLA={precinctsDataLA}
+      precinctsDataNJ={precinctsDataNJ}
+      geojsonDataLA={geojsonDataLA}
+      geojsonDataNJ={geojsonDataNJ}
       currArea={currArea}
       currState={selectedState}
       handleArrowClick={handleArrowClick}

@@ -2,15 +2,46 @@ import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2'; 
 import 'chart.js/auto';
 
-const IncomeChart = ({ currArea, currState, stateData }) => {
+const IncomeChart = ({ currArea, currState, stateData, precinctsDataLA, precinctsDataNJ }) => {
   const [chartData, setChartData] = useState(null);
   const [totalHouseholds, setTotalHouseholds] = useState(0);
+
+  const findPrecinct = (precinctName, precinctBound) => {
+    return precinctBound.features.find(
+      (feature) => feature.properties.NAME === precinctName
+    );
+  };
 
   //console.log(stateData);
   const loadData = () => {
     try {
       // Access income data for the current state
-      const stateIncomeData = stateData?.income_data?.[currState];
+      let stateIncomeData;
+      if(currArea === currState){
+        console.log("WE ARE STATE");
+        stateIncomeData = stateData?.income_data?.[currState];
+      }
+      else if(currArea.includes("District ")){
+        stateIncomeData=stateData?.income_data?.[currArea];
+      }
+      else{
+        let test;
+        let bound;
+        if(currState === "Louisiana"){
+          bound=precinctsDataLA;
+          test=findPrecinct(currArea, bound);
+          stateIncomeData=test?.properties?.income_data?.[currArea];
+        }
+        else{
+          bound=precinctsDataNJ;
+          test=findPrecinct(currArea, bound);
+          stateIncomeData=test?.properties?.income_data?.[currArea];
+        }
+        console.log("WE ARE IN DISTRICT AND PRECINCT");
+        
+        // stateIncomeData = stateData?.income_data?.[currState];
+      }
+
       if (!stateIncomeData) {
         console.warn(`No income data found for state: ${currState}`);
         setChartData(null); // Reset chart if no data is found

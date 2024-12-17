@@ -2,15 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 
-const VotingChart = ({ currArea, stateData }) => {
+const VotingChart = ({ currArea, currState, stateData, precinctsDataLA, precinctsDataNJ, geojsonDataLA, geojsonDataNJ }) => {
   const [chartData, setChartData] = useState(null);
   const [totalVotes, setTotalVotes] = useState(0);
   const [chartTitle, setChartTitle] = useState('');
 
+  const findPrecinct = (precinctName, precinctBound) => {
+    return precinctBound.features.find(
+      (feature) => feature.properties.NAME === precinctName
+    );
+  };
+
   // Race mapping for labels and corresponding keys in stateData
   const voteMapping = [
-    { key: 'democratic_votes', category: 'Biden' },
-    { key: 'republican_votes', category: 'Trump' },
+    {key: "G20PREDBID", category: "Biden"},
+    {key: "G20PRERTRU", category: "Trump"}
   ];
 
   // Function to prepare filtered data and calculate total population
@@ -19,12 +25,90 @@ const VotingChart = ({ currArea, stateData }) => {
 
     // Create chart data from stateData using raceMapping
     const filteredData = voteMapping.map((vote) => {
-      const votes = (stateData[vote.key]/(stateData.democratic_votes + stateData.republican_votes))*100 || 0; // Default to 0 if the key doesn't exist
+      let votes;
+      if(currArea===currState){
+        votes = (stateData[vote.key]/(stateData.G20PREDBID + stateData.G20PRERTRU))*100 || 0; // Default to 0 if the key doesn't exist
+        console.log(votes);
+      }
+      else if(currArea.includes("District ")){
+        let test1;
+        let bound1;
+        if(currState==="Louisiana"){
+          bound1=geojsonDataLA;
+          test1=findPrecinct(currArea, bound1);
+          votes= (test1.properties[vote.key]/(test1.properties.G20PREDBID + test1.properties.G20PRERTRU))*100 || 0;
+        }
+        else{
+          bound1=geojsonDataNJ;
+          test1=findPrecinct(currArea, bound1);
+          votes= (test1.properties[vote.key]/(test1.properties.G20PREDBID + test1.properties.G20PRERTRU))*100 || 0;
+        }
+      }
+      else{
+        let test;
+        let bound;
+        if(currState==="Louisiana"){
+            bound=precinctsDataLA;
+            test=findPrecinct(currArea, bound);
+            if((test.properties.G20PREDBID+test.properties.G20PRERTRU) === 0){
+              votes=0;
+              console.log("WE HAVE 0 VOTES")
+            }
+            else{
+              votes= (test.properties[vote.key]/(test.properties.G20PREDBID + test.properties.G20PRERTRU))*100 || 0;
+              console.log("WE HAVE MORE THAN 0 VOTES: ", votes);
+            }
+        }
+        else{
+            bound=precinctsDataNJ;
+            test=findPrecinct(currArea, bound);
+            if((test.properties.G20PREDBID+test.properties.G20PRERTRU) === 0){
+              votes=0;
+            }
+            else{
+              votes= (test.properties[vote.key]/(test.properties.G20PREDBID + test.properties.G20PRERTRU))*100 || 0;
+            }
+        }
+      }
       return { category: vote.category, votes };
+
+
     });
 
     // Calculate total population
-    const total = stateData.democratic_votes + stateData.republican_votes;
+    let total;
+    if(currArea===currState){
+      total = stateData.G20PREDBID + stateData.G20PRERTRU;
+    }
+    else if(currArea.includes("District ")){
+      let test;
+      let bound;
+      if(currState==="Louisiana"){
+        bound=geojsonDataLA;
+        test=findPrecinct(currArea, bound);
+        total=test.properties.G20PREDBID+test.properties.G20PRERTRU;
+      }
+      else{
+        bound=geojsonDataNJ;
+        test=findPrecinct(currArea, bound);
+        total=test.properties.G20PREDBID+test.properties.G20PRERTRU;
+      }
+    }
+    else{
+      let test;
+      let bound;
+      if(currState==="Louisiana"){
+        bound=precinctsDataLA;
+        test=findPrecinct(currArea, bound);
+        total=test.properties.G20PREDBID+test.properties.G20PRERTRU;
+      }
+      else{
+        bound=precinctsDataNJ;
+        test=findPrecinct(currArea, bound);
+        total=test.properties.G20PREDBID+test.properties.G20PRERTRU;
+      }
+    }
+    
 
     // Prepare chart configuration
     const chartData = {

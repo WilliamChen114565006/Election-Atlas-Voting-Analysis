@@ -13,7 +13,7 @@ import RegionChart from './RegionChart';
 import EcologicalInference from './EcologicalInference';
 import '../styles/Tabs.css';
 
-export default function InfoPanel({ stateName, currArea, handleArrowClick, currState, handleSelectedDistrict }) {
+export default function InfoPanel({ stateName, currArea, handleArrowClick, currState, handleSelectedDistrict, precinctsDataLA, precinctsDataNJ, geojsonDataLA, geojsonDataNJ }) {
   const [activeTab, setActiveTab] = useState(0);
   const [isPointLeft, setPointLeft] = useState(true);
   const [isMinimized, setMinimizeInfoPanel] = useState(false);
@@ -29,7 +29,6 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
       console.error('Error fetching state data:', error);
     } finally {
       setLoading(false); // End loading
-      console.log("HELLOOOOOO", stateData);
     }
   };
 
@@ -65,8 +64,8 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
           <div className='infoDiv'>
             <h2 className='stateNameInfoPanel'>{stateName}</h2>
             <div style={{ fontSize: '20px' }}>
-              <span style={{ fontWeight: 'bold' }}>Current Area: </span>
-              <span>{currArea}</span>
+              <span style={{ fontWeight: 'bold' }}>Current State: </span>
+              <span>{currState}</span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Political Lean: </span>
               <span>{stateData?.winning_party?.toLocaleString() || ''}</span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Average Household Income ($): </span>
@@ -116,18 +115,23 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
                   <div className="topChartsContainer">
                     <div className="PopChart">
                       {/* {currArea && <Chart currArea={currArea} stateData={stateData} />} */}
-                      <Chart currArea={currArea} stateData={stateData} />
+                      <Chart currArea={currArea} stateData={stateData} currState={currState}
+                        precinctsDataLA={precinctsDataLA} precinctsDataNJ={precinctsDataNJ}
+                        geojsonDataLA={geojsonDataLA} geojsonDataNJ={geojsonDataNJ}
+                      />
                     </div>
                     <div className="VotingChart">
                       {currArea && (
-                        <VotingChart currArea={currArea} currState={currState} stateData={stateData} />
+                        <VotingChart currArea={currArea} currState={currState} stateData={stateData}
+                        precinctsDataLA={precinctsDataLA} precinctsDataNJ={precinctsDataNJ}
+                        geojsonDataLA={geojsonDataLA} geojsonDataNJ={geojsonDataNJ} />
                       )}
                     </div>
                   </div>
                   <div className="DoubleContainer">
                     <div className="IncomeChart">
                       {currArea && (
-                        <IncomeChart currArea={currArea} currState={currState} stateData={stateData} />
+                        <IncomeChart currArea={currArea} currState={currState} stateData={stateData} precinctsDataLA={precinctsDataLA} precinctsDataNJ={precinctsDataNJ} />
                       )}
                     </div>
                     <div className="RegionChart">

@@ -181,8 +181,8 @@ public class ServerController {
         String cacheKey;
         String cacheName = GINGLES_CACHE;
         // System.out.println(race);
-        System.out.println(selectedDisplay);
-        System.out.println(state);
+        // System.out.println(selectedDisplay);
+        // System.out.println(state);
         // if (!race.equals("overall")) {
             cacheKey = selectedDisplay + state + race + GINGLES_CACHE_KEY_SUFFIX;
         // }
