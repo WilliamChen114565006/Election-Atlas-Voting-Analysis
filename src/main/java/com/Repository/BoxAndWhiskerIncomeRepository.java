@@ -6,5 +6,5 @@ import com.Model.BoxAndWhiskerIncomeModel;
 
 @Repository
 public interface BoxAndWhiskerIncomeRepository extends MongoRepository<BoxAndWhiskerIncomeModel, String>{
-    BoxAndWhiskerIncomeModel findByStateIgnoreCaseAndTypeIgnoreCase(String state, String type);
+    BoxAndWhiskerIncomeModel findByStateIgnoreCaseAndTypeIgnoreCaseAndRegionIgnoreCase(String state, String type, String regionForRace);
 }

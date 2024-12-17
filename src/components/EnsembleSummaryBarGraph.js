@@ -69,13 +69,17 @@ const EnsembleSummaryBarGraph = ({ stateName }) => {
     responsive: true,
     plugins: {
       legend: { position: "top" },
+      labels: {
+        color: "black", // Explicit color for legend labels
+      },
       title: { 
         display: true, 
         text: `Democratic/Republican District Splits for ${ensemble.charAt(0).toUpperCase() + ensemble.slice(1)} Ensemble (${numOfPlan} Plans)`,
         font: {
-          size: 20, // Adjust the size as needed
+          size: 24, // Adjust the size as needed
           weight: "bold", // Optional: Make the text bold
         },
+        color: "black",
       },
     },
     scales: {
@@ -84,6 +88,7 @@ const EnsembleSummaryBarGraph = ({ stateName }) => {
             display: true, 
             text: "District Splits (Democratic/Republican)", 
             font: { size: 18 }, // Set the font size for the x-axis label
+            color: "black",
           } 
         },
         y: { 
@@ -91,6 +96,7 @@ const EnsembleSummaryBarGraph = ({ stateName }) => {
             display: true, 
             text: "Number of Random District Plans", 
             font: { size: 18 }, // Set the font size for the y-axis label
+            color: "black",
           } 
         },
       },

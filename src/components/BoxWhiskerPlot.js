@@ -11,30 +11,38 @@ export default function BoxWhiskerPlot({ stateName }) {
   const [raceGroup, setRaceGroup] = useState("White");
   const [incomeGroup, setIncomeGroup] = useState("Low Income");
   const [regionType, setRegionType] = useState("Rural");
+  const [regionTypeForRace, setRegionTypeForRace] = useState("Overall");
   const displayCategory = ["Race", "Income", "Region"];
   const incomeGroups = ["Low Income", "Medium Income", "High Income"];
   const regionTypes = ["Rural", "Suburban", "Urban"];
+  const regionTypesForRace = ["Overall", "Rural", "Suburban", "Urban"];
 
   let raceGroups = [];
   if(stateName == "Louisiana"){
     raceGroups = ["White", "Black"];
   }
   if(stateName == "New Jersey"){
-    raceGroups = ["White", "Black", "Asian"];
+    raceGroups = ["White", "Black", "Asian", "Other"];
   }
 
   const stateNameWithSpace = stateName;
   stateName = stateName.replace(/ /g, "_");
 
   useEffect(() => {
-    fetchBoxWhiskData(selectedDisplay);
-  }, [stateName, raceGroup, raceCategory, incomeGroup, regionType, selectedDisplay]);
+    fetchBoxWhiskData(selectedDisplay, regionTypeForRace);
+  }, [stateName, raceGroup, raceCategory, incomeGroup, regionType, selectedDisplay, regionTypeForRace]);
 
-  const fetchBoxWhiskData = async (displayCategory) => {
+  const fetchBoxWhiskData = async (displayCategory, regionTypeForRace) => {
+    if(displayCategory == "Race" && regionTypeForRace == "noRegion"){
+      regionTypeForRace = "Overall";
+    }
+    console.log(displayCategory);
+    console.log(regionTypeForRace);
     try {
-      const response = await axios.get(`http://localhost:8080/box-and-whisker/${stateName}/${displayCategory}`);
+      const response = await axios.get(`http://localhost:8080/box-and-whisker/${stateName}/${displayCategory}/${regionTypeForRace}`);
+      console.log(response.data);
       if(displayCategory == "Race"){
-        //console.log(response.data);
+        // console.log(response.data);
         setRaceData(response.data);
         let modifiedString = raceGroup.charAt(0).toLowerCase() + raceGroup.slice(1);
         updatePlot(response.data, modifiedString, stateNameWithSpace); 
@@ -44,20 +52,20 @@ export default function BoxWhiskerPlot({ stateName }) {
         setRaceData(response.data);
         let modifiedString = incomeGroup.replace(/ /g, "_");
         modifiedString = modifiedString.charAt(0).toLowerCase() + modifiedString.slice(1);
-        updatePlot(response.data, modifiedString, stateNameWithSpace); 
+        updatePlot(response.data, modifiedString, stateNameWithSpace, null); 
       }
       if(displayCategory == "Region"){
         //console.log(response.data);
         setRaceData(response.data);
         let modifiedString = regionType.charAt(0).toLowerCase() + regionType.slice(1);
-        updatePlot(response.data, modifiedString, stateNameWithSpace); 
+        updatePlot(response.data, modifiedString, stateNameWithSpace, null); 
       }
     } catch (error) {
       console.error("Error fetching race data:", error);
     }
   };
 
-  const updatePlot = (data, category, stateName) => {
+  const updatePlot = (data, category, stateName, regionTypeForRace) => {
     const selectedRaceData = data[category];
     if (!selectedRaceData) {
       console.error("Invalid category:", category);
@@ -122,16 +130,18 @@ export default function BoxWhiskerPlot({ stateName }) {
       title: {
         text: `Percentage of ${modifiedString} Population in ${stateName} In Large Ensemble (5000 Plans)`,
         font: {
-          size: 20, // Adjust font size as needed
+          size: 24, // Adjust font size as needed
           weight: "bold" // Makes the title bold
-        }
+        },
+        color: "black",
       },
       xaxis: {
         title: {
           text: "Districts",
           font: {
             size: 18, // Adjust font size as needed
-          }
+          },
+          color: "black",
         },
         tickangle: 0,
         tickvals: bucketNames,
@@ -142,7 +152,8 @@ export default function BoxWhiskerPlot({ stateName }) {
           text: "Population (%)",
           font: {
             size: 18, // Adjust font size as needed
-          }
+          },
+          color: "black",
         },
       },
       showlegend: true,
@@ -157,8 +168,17 @@ export default function BoxWhiskerPlot({ stateName }) {
     //updatePlot(raceData, selectedCategory);
   };
 
+  const handleRegionTypeForRaceChange = (event) => {
+    // const selectedCategory = event.target.value;
+    setRegionTypeForRace(event.target.value);
+    //updatePlot(raceData, selectedCategory);
+  };
+
   const handleDisplayChange = (event) => {
     setSelectedDisplay(event.target.value);
+    if(event.target.value != "race"){
+      setRegionTypeForRace("noRegion");
+    }
   };
 
   const handleIncomeGroupChange = (event) => {
@@ -196,6 +216,25 @@ export default function BoxWhiskerPlot({ stateName }) {
             {raceGroups.map((raceGroup, index) => (
               <option key={index} value={raceGroup}>
                 {raceGroup}
+              </option>
+            ))}
+
+            {/* {Object.keys(raceData).map((category) => (
+              <option key={category} value={category}>
+                {category.replace("_POP", "").toUpperCase()}
+              </option>
+            ))} */}
+          </select>
+          
+          <label htmlFor="race-select" style={{ marginRight: "10px", marginLeft: "10px" }}>Select Region:</label>
+          <select
+            id="race-select"
+            value={regionTypeForRace}
+            onChange={handleRegionTypeForRaceChange}
+          >
+            {regionTypesForRace.map((regionTypeForRace, index) => (
+              <option key={index} value={regionTypeForRace}>
+                {regionTypeForRace}
               </option>
             ))}
 

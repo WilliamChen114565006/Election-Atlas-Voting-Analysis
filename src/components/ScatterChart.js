@@ -164,27 +164,27 @@ export default function ScatterPlot({ stateName }) {
 
   return (
     <div>
-      <h3>Precinct-by-Precinct Voting and Demographic Analysis</h3>
-      <label htmlFor="display-select" style={{ fontSize: "20px" }}>Select Display:</label>
+      <div style={{ fontSize: "24px", marginBottom: "10px" }}><strong>Precinct-by-Precinct Voting and Demographic Analysis</strong></div>
+      <label htmlFor="display-select" style={{ fontSize: "18px" }}>Select Display:</label>
       <select
         id="display-select"
         value={selectedDisplay}
         onChange={handleDisplayChange}
-        style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "19px" }}
+        style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "18px" }}
       >
         <option value="race">Race</option>
         <option value="income">Income</option>
         <option value="income_race">Income/Race</option>
       </select>
       {selectedDisplay === "income" && (
-        <label htmlFor="region-select" style={{ marginLeft: "20px", fontSize: "20px" }}>Select Region:</label>
+        <label htmlFor="region-select" style={{ marginLeft: "20px", fontSize: "18px" }}>Select Region:</label>
       )}
       {selectedDisplay === "income" && (
         <select
           id="region-select"
           value={selectedRegion}
           onChange={handleRegionChange}
-          style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "19px" }}
+          style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "18px" }}
         >
           {regions.map((region, index) => (
             <option key={index} value={region.toLowerCase()}>
@@ -195,12 +195,12 @@ export default function ScatterPlot({ stateName }) {
       )}
       {selectedDisplay !== "income" && (
         <>
-          <label htmlFor="race-select" style={{ marginLeft: "20px", fontSize: "20px" }}>Select Race:</label>
+          <label htmlFor="race-select" style={{ marginLeft: "20px", fontSize: "18px" }}>Select Race:</label>
           <select
             id="race-select"
             value={selectedRace}
             onChange={handleRaceChange}
-            style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "19px" }}
+            style={{ marginLeft: "10px", marginBottom: "20px", fontSize: "18px" }}
           >
             {races.map((race, index) => (
               <option key={index} value={race}>
@@ -210,7 +210,7 @@ export default function ScatterPlot({ stateName }) {
           </select>
         </>
       )}
-      <Scatter data={data} options={options} />
+      <Scatter data={data} options={options} height={'45%'} width={'100%'}/>
     </div>
   );
 }

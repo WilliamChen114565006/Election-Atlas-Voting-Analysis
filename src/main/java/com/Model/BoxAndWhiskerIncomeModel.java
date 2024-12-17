@@ -13,6 +13,7 @@ import java.util.Map;
 public class BoxAndWhiskerIncomeModel {
     private String state;
     private String type;
+    private String region;
     private Map<String, Object> Low_Income;
     private Map<String, Object> Medium_Income;
     private Map<String, Object> High_Income;
