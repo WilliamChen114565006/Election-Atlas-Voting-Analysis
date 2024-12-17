@@ -44,17 +44,17 @@ export default function App() {
   const [isMinimized, setMinimizeSidebar] = useState(false);
   const [currArea, setCurrArea] = useState(null);
   const [fakecurrArea, setFakeCurrArea] = useState(null)
-  const[isLegendVisible, setLegendVisible] = useState(false);
+  const [isLegendVisible, setLegendVisible] = useState(false);
   const [allVoteData2, setAllVoteData2] = useState([]);
   const [minorityDensityDataLA, setMinorityDensityDataLA] = useState([]);
-  const[isIncomeLegend, setIncomeLegend]=useState("district");
+  const [isIncomeLegend, setIncomeLegend]=useState("district");
   const [isAllIncomeData, setisAllIncomeData] = useState([]);
   const [isAllIncomeData2, setisAllIncomeData2] = useState([]);
   const [minorityDensityDataNJ, setMinorityDensityDataNJ] = useState([]);
   const [colors, setColors] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [race, setRace] = useState("white");
-  const[reset, setReset] = useState("false");
+  const [reset, setReset] = useState("false");
 
   const StateEnum = Object.freeze({
     LOUISIANA: 'louisiana',
@@ -570,12 +570,12 @@ const getFeatureStyle = (feature) => {
 
   //DISTRICT STYLE
   const getDistrictStyle = (feature) => {
-    const isSelected = feature.properties.name === selectedDistrict;
-    const party = feature.properties.party;
+    const isSelected = feature.properties.NAME === selectedDistrict;
+    const party = feature.properties.winning_party;
   
-    const fillColor = party === 'Republican'
+    const fillColor = party === 'republican'
       ? 'red'
-      : party === 'Democrat'
+      : party === 'democrat'
       ? 'blue'
       : '#cccccc';
   

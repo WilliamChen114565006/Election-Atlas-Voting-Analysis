@@ -150,7 +150,7 @@ const EcologicalInference = ({ stateName }) => {
 
   return (
     <div>
-      <h1>Ecological Inference</h1>
+      <h1 style={{ fontSize: "24px"}}>Ecological Inference</h1>
       <div>
       <label style={{ paddingRight: "20px" }}>
           Display Type:

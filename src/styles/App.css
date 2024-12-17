@@ -712,22 +712,22 @@ path.leaflet-interactive:focus {
 }
 
 #ensembleTableDiv{
-  display: 'flex'; 
-  justify-content: 'right';
-  align-items: 'right'; 
-  margin-left: '10px';
-  margin-bottom: 10px;
+  display: flex; 
+  justify-content: left;
+  align-items: left; 
+  width: 98%;
+  margin-top: 5px;
 }
 
 #ensembleTable{
-  width: 98.5%;
+  width: 100%;
   border-style: solid;
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .ensembleTableRow1{
   border-bottom: solid;
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .tooltip {

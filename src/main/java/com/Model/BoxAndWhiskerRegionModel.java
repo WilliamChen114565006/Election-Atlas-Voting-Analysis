@@ -13,6 +13,7 @@ import java.util.Map;
 public class BoxAndWhiskerRegionModel {
     private String state;
     private String type;
+    private String region;
     private Map<String, Object> Rural;
     private Map<String, Object> Suburban;
     private Map<String, Object> Urban;

@@ -6,5 +6,5 @@ import com.Model.BoxAndWhiskerRegionModel;
 
 @Repository
 public interface BoxAndWhiskerRegionRepository extends MongoRepository<BoxAndWhiskerRegionModel, String>{
-    BoxAndWhiskerRegionModel findByStateIgnoreCaseAndTypeIgnoreCase(String state, String type);
+    BoxAndWhiskerRegionModel findByStateIgnoreCaseAndTypeIgnoreCaseAndRegionIgnoreCase(String state, String type, String regionForRace);
 }

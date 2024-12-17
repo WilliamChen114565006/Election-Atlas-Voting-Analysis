@@ -13,6 +13,7 @@ import java.util.Map;
 public class BoxAndWhiskerLAModel {
     private String state;
     private String type;
+    private String region;
     private Map<String, Object> White;
     private Map<String, Object> Black;
     private Map<String, Object> Asian;
