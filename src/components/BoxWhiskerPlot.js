@@ -138,7 +138,7 @@ export default function BoxWhiskerPlot({ stateName }) {
       },
       xaxis: {
         title: {
-          text: "Districts",
+          text: "Indexed Districts",
           font: {
             size: 18, // Adjust font size as needed
           },
@@ -159,7 +159,7 @@ export default function BoxWhiskerPlot({ stateName }) {
       },
       showlegend: true,
       autosize: true,
-      height:580  ,
+      height:540  ,
     });
   };
 
@@ -195,6 +195,7 @@ export default function BoxWhiskerPlot({ stateName }) {
       <div style={{ marginBottom: "20px"}}>
         <label htmlFor="display-select" style={{ marginRight: "10px" }}>Select Display:</label>
         <select
+          className="allDropDown"
           id="display-select"
           value={selectedDisplay}
           onChange={handleDisplayChange}
@@ -210,6 +211,7 @@ export default function BoxWhiskerPlot({ stateName }) {
           <>
           <label htmlFor="race-select" style={{ marginRight: "10px", marginLeft: "10px" }}>Select Race:</label>
           <select
+            className="allDropDown"
             id="race-select"
             value={raceGroup}
             onChange={handleRaceChange}
@@ -229,6 +231,7 @@ export default function BoxWhiskerPlot({ stateName }) {
           
           <label htmlFor="race-select" style={{ marginRight: "10px", marginLeft: "10px" }}>Select Region:</label>
           <select
+            className="allDropDown"
             id="race-select"
             value={regionTypeForRace}
             onChange={handleRegionTypeForRaceChange}
@@ -252,6 +255,7 @@ export default function BoxWhiskerPlot({ stateName }) {
           <>
           <label htmlFor="income-select" style={{ marginRight: "10px", marginLeft: "10px"  }}>Select Income Group:</label>
           <select
+            className="allDropDown"
             id="income-select"
             value={incomeGroup}
             onChange={handleIncomeGroupChange}
@@ -270,6 +274,7 @@ export default function BoxWhiskerPlot({ stateName }) {
           <>
           <label htmlFor="region-select" style={{ marginRight: "10px", marginLeft: "10px"  }}>Select Region Type:</label>
           <select
+            className="allDropDown"
             id="region-select"
             value={regionType}
             onChange={handleRegionTypeChange}
@@ -290,7 +295,7 @@ export default function BoxWhiskerPlot({ stateName }) {
         data={plotData}
         layout={layout}
         config={{ responsive: true }}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '80%' }}
       />
     </div>
   );

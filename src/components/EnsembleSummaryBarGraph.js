@@ -107,6 +107,7 @@ const EnsembleSummaryBarGraph = ({ stateName }) => {
       {/* Dropdown for ensemble selection */}
       <label htmlFor="ensemble-select">Select Ensemble: </label>
       <select
+        className="allDropDown"
         id="ensemble-select"
         value={ensemble}
         onChange={(e) => setEnsemble(e.target.value)}
@@ -115,7 +116,7 @@ const EnsembleSummaryBarGraph = ({ stateName }) => {
         <option value="test">Test Ensemble</option>
       </select>
 
-        <Bar data={chartData} options={options} />
+        <Bar data={chartData} options={options} height={'47.5%'} width={'100%'}/>
     </div>
   );
 };

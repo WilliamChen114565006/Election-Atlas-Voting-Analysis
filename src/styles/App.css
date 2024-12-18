@@ -831,3 +831,7 @@ path.leaflet-interactive:focus {
   background-color: #d32f2f;
 }
 
+.allDropDown{
+  border-radius: 6px;
+  margin-left: 5px;
+}
