@@ -596,16 +596,20 @@ const getPrecinctBlackStyle = (feature) => {
   const blackPercent = (racePopulation / TOT_POP) * 100;
 
   let color = "";
-  if (blackPercent > 80) {
-      color = "80%-100%";
+  if (blackPercent > 90) {
+      color = "90%-100%";
+  } else if (blackPercent > 75) {
+      color = "75%-90%";
   } else if (blackPercent > 60) {
-      color = "60%-80%";
-  } else if (blackPercent > 40) {
-      color = "40%-60%";
-  } else if (blackPercent > 20) {
-      color = "20%-40%";
+      color = "60%-75%";
+  } else if (blackPercent > 45) {
+      color = "45%-60%";
+  } else if (blackPercent > 30) {
+      color = "30%-45%";
+  } else if (blackPercent > 15) {
+      color = "15%-30%";
   } else {
-      color = "0%-20%";
+      color = "0%-15%";
   }
 
   let raceColor=colors[color];
@@ -678,22 +682,22 @@ const getPrecinctVoteMarginStyle=(feature)=>{
       partyColor=0;
     }
 
-    if (AVG_INC < 20000){
+    if (AVG_INC < 25000){
       hueColor="90%";
     }
-    else if(AVG_INC < 35000){
+    else if(AVG_INC < 50000){
       hueColor="75%";
     }
-    else if(AVG_INC < 50000){
+    else if(AVG_INC < 75000){
       hueColor="60%";
     }
-    else if(AVG_INC < 100000){
+    else if(AVG_INC < 125000){
       hueColor="45%";
     }
-    else if(AVG_INC < 200000){
+    else if(AVG_INC < 150000){
       hueColor="30%";
     }
-    else if(AVG_INC >= 200000){
+    else if(AVG_INC >= 150000){
       hueColor="15%";
     }
 
@@ -759,16 +763,20 @@ const getPrecinctPovertyStyle = (feature) =>{
     const { poverty_fraction }=feature.properties;
     const poverty_percentage=poverty_fraction*100;
     let color="";
-    if (poverty_percentage > 80) {
-      color = "80%-100%";
+    if (poverty_percentage > 90) {
+      color = "90%-100%";
+  } else if (poverty_percentage > 75) {
+      color = "75%-90%";
   } else if (poverty_percentage > 60) {
-      color = "60%-80%";
-  } else if (poverty_percentage > 40) {
-      color = "40%-60%";
-  } else if (poverty_percentage > 20) {
-      color = "20%-40%";
+      color = "60%-75%";
+  } else if (poverty_percentage > 45) {
+      color = "45%-60%";
+  } else if (poverty_percentage > 30) {
+      color = "30%-45%";
+  } else if (poverty_percentage > 15) {
+      color = "15%-30%";
   } else {
-      color = "0%-20%";
+      color = "0%-15%";
   }
   let povertyColor=colors[color];
 

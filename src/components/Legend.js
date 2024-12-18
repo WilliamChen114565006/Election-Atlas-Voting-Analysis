@@ -12,27 +12,27 @@ export default function Legend({ isVisible, legendColor, colors }) {
           <ul className="legend-list">
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 20%)' }}></span>
-                200k+
+                150k+
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 30%)' }}></span>
-                100k-200k
+                125k-150k
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 45%)' }}></span>
-                50k-100k
+                75k-125k
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 60%)' }}></span>
-                35k-50k
+                50k-75k
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 75%)' }}></span>
-                20k-35k
+                25k-50k
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(0, 100%, 90%)' }}></span>
-                10k-20k
+                {'>'}25k
               </li>
           </ul>
         </div>
@@ -41,27 +41,27 @@ export default function Legend({ isVisible, legendColor, colors }) {
           <ul className="legend-list">
           <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 20%)' }}></span>
-                200k+
+                150k+
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 30%)' }}></span>
-                100k-200k
+                125k-150k
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 45%)' }}></span>
-                50k-100k
+                75k-125k
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 60%)' }}></span>
-                35k-50k
+                50k-75k
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 75%)' }}></span>
-                20k-35k
+                25k-50k
               </li>
               <li>
                 <span className="legend-color" style={{ backgroundColor: 'hsl(240, 100%, 90%)' }}></span>
-                10k-20k
+                {'>'}25k
               </li>
           </ul>
         </div>

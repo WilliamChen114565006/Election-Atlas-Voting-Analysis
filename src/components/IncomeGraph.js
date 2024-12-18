@@ -141,7 +141,7 @@ const IncomeChart = ({ currArea, currState, stateData, precinctsDataLA, precinct
                 x: {
                   title: {
                     display: true,
-                    text: 'Median Household Income',
+                    text: 'Household Income',
                     font: {
                       family: 'Open Sans',
                       size: 14,

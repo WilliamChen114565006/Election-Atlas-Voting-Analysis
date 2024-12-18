@@ -53,6 +53,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
     if (isDistrictActive) return; // Prevent interaction if District is active
     const selectedOption = event.target.value;
     setSelectedPoliticalOption(selectedOption);
+    setSelectedRaceOption("");
     if (selectedOption === "Political/Income") changeLegendColor2("voting");
     else if (selectedOption === "VotingMargin") changeLegendColor2("margin");
     setActiveLegendButton("");
