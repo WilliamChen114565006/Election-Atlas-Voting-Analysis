@@ -169,6 +169,7 @@ const PopulationChart = ({ currArea, stateData, currState, precinctsDataNJ, prec
             options={{
               responsive: true,
               maintainAspectRatio: false,
+              animation: false,
               plugins: {
                 title: {
                   display: true,

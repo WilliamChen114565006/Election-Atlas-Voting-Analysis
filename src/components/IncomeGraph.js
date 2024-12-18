@@ -117,6 +117,7 @@ const IncomeChart = ({ currArea, currState, stateData, precinctsDataLA, precinct
             options={{
               responsive: true,
               maintainAspectRatio: false,
+              animation: false,
               plugins: {
                 title: {
                   display: true,
@@ -172,6 +173,7 @@ const IncomeChart = ({ currArea, currState, stateData, precinctsDataLA, precinct
                 },
               },
             }}
+            
           />
         ) : (
           <p>Loading chart data...</p>

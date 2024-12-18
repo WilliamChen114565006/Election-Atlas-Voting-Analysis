@@ -32,6 +32,7 @@ export default function RegionChart({ currArea, stateData}){
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        animation: false,
         plugins: {
             title: {
                 display: true,

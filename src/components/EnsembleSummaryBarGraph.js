@@ -67,6 +67,7 @@ const EnsembleSummaryBarGraph = ({ stateName }) => {
 
   const options = {
     responsive: true,
+    animation: false,
     plugins: {
       legend: { position: "top" },
       labels: {

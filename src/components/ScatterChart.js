@@ -99,7 +99,7 @@ export default function ScatterPlot({ stateName}) {
       return {
         precinct: props.NAME,
         totalPopulation: props.TOT_POP,
-        regionType: props.classification,
+        regionType: props.classification.charAt(0).toUpperCase()+props.classification.slice(1),
         nonWhitePopulation: props.TOT_POP - props.WHITE_POP,
         avgIncome: props.AVG_INC,
         republicanVotes: props.G20PRERTRU,
@@ -177,6 +177,7 @@ export default function ScatterPlot({ stateName}) {
   };
 
   const options = {
+    animation: false,
     scales: {
       x: {
         title: {
@@ -224,7 +225,7 @@ export default function ScatterPlot({ stateName}) {
     <div>
       <h3 style={{ fontSize: '24px'}}>Precinct-by-Precinct Voting and Demographic Analysis</h3>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
+        <div style={{ visibility: showTable ? "hidden" : "visible" }}>
           <label htmlFor="display-select">Select Display:</label>
           <select className="allDropDown" id="display-select" value={selectedDisplay} onChange={handleDisplayChange}>
             <option value="race">Race</option>
