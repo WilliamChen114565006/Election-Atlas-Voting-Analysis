@@ -177,6 +177,7 @@ export default function ScatterPlot({ stateName}) {
   };
 
   const options = {
+    animation: false,
     scales: {
       x: {
         title: {

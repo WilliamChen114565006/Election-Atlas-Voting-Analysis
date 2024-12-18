@@ -154,6 +154,7 @@ const VotingChart = ({ currArea, currState, stateData, precinctsDataLA, precinct
             options={{
               responsive: true,
               maintainAspectRatio: false,
+              animation: false,
               plugins: {
                 title: {
                   display: true,
