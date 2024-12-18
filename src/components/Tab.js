@@ -5,6 +5,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
   const [activeLegendButton, setActiveLegendButton] = useState(''); // Initial highlight for Voting
   const [activePrecinctDistrict, setActivePrecinctDistrict] = useState('district'); // Initial highlight for Districts
   const [selectedRaceOption, setSelectedRaceOption] = useState(''); // Track selected race option
+  const [selectedPoliticalOption, setSelectedPoliticalOption] = useState(''); // Track selected political/income option
 
   const isDistrictActive = activePrecinctDistrict === 'district';
 
@@ -13,6 +14,9 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
       setActiveLegendButton("");
       setSelectedRaceOption("");
       setActivePrecinctDistrict("district");
+
+      setSelectedPoliticalOption('');
+
       changeLegendColor2("district");
       setReset(false);
     }
@@ -31,14 +35,26 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
     else if (buttonId === "povertybutton") changeLegendColor2("poverty");
     else if (buttonId === "marginbutton") changeLegendColor2("margin");
     setSelectedRaceOption("");
+    setSelectedPoliticalOption('');
   };
 
   const handleRaceOptionChange = (event) => {
     if (isDistrictActive) return; // Prevent interaction if District is active
     const selectedOption = event.target.value;
     setSelectedRaceOption(selectedOption);
+    setSelectedPoliticalOption('');
     changeRaceOption(selectedOption);
     changeLegendColor2("race");
+    setActiveLegendButton("");
+  };
+
+
+  const handlePoliticalOptionChange = (event) => {
+    if (isDistrictActive) return; // Prevent interaction if District is active
+    const selectedOption = event.target.value;
+    setSelectedPoliticalOption(selectedOption);
+    if (selectedOption === "Political/Income") changeLegendColor2("voting");
+    else if (selectedOption === "VotingMargin") changeLegendColor2("margin");
     setActiveLegendButton("");
   };
 
@@ -48,11 +64,13 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
       if (stateName === "Louisiana") onPrecinctsClickLA();
       else if (stateName === "New Jersey") onPrecinctsClickNJ();
       changeLegendColor2("voting");
+      setSelectedPoliticalOption("Politcal/Income")
       setActiveLegendButton('votingbutton');
     } else {
       onDistrictsClick();
       setActiveLegendButton('');
       setSelectedRaceOption('');
+      setSelectedPoliticalOption("");
       changeLegendColor2("district");
     }
   };
@@ -78,22 +96,17 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
           </button>
         )}
 
-        <button
-          id="votingbutton"
-          className={`${activeLegendButton === 'votingbutton' ? 'active' : ''} ${isDistrictActive ? 'disabled' : ''}`}
-          onClick={() => handleLegendButtonClick('votingbutton')}
+        <select
+          id="politicalDropdown"
+          value={selectedPoliticalOption}
+          onChange={handlePoliticalOptionChange}
+          className={`political-dropdown ${isDistrictActive ? 'disabled' : ''}`}
           disabled={isDistrictActive}
         >
-          Voting
-        </button>
-        <button
-          id="marginbutton"
-          className={`${activeLegendButton === 'marginbutton' ? 'active' : ''} ${isDistrictActive ? 'disabled' : ''}`}
-          onClick={() => handleLegendButtonClick('marginbutton')}
-          disabled={isDistrictActive}
-        >
-          Voting Margin
-        </button>
+          <option value="" disabled>Voting</option>
+          <option value="Political/Income">Income</option>
+          <option value="VotingMargin">Margin</option>
+        </select>
 
         <select
           id="raceDropdown"
