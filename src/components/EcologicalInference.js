@@ -155,7 +155,7 @@ const EcologicalInference = ({ stateName }) => {
       <div>
         <label style={{ paddingRight: "20px" }}>
           Display Type:
-          <select value={selectedDisplay} onChange={(e) => setSelectedDisplay(e.target.value)}>
+          <select className="allDropDown" value={selectedDisplay} onChange={(e) => setSelectedDisplay(e.target.value)}>
             <option value="race">Race</option>
             <option value="income">Income</option>
           </select>
@@ -164,7 +164,7 @@ const EcologicalInference = ({ stateName }) => {
         {selectedDisplay === "race" ? (
           <label>
             Race:
-            <select value={selectedRace} onChange={(e) => setSelectedRace(e.target.value.toLowerCase())}>
+            <select className="allDropDown" value={selectedRace} onChange={(e) => setSelectedRace(e.target.value.toLowerCase())}>
               {races.map((race) => (
                 <option key={race} value={race.toLowerCase()}>
                   {race}
@@ -175,7 +175,7 @@ const EcologicalInference = ({ stateName }) => {
         ) : (
           <label>
             Income Level:
-            <select value={selectedIncome} onChange={(e) => setSelectedIncome(e.target.value)}>
+            <select className="allDropDown" value={selectedIncome} onChange={(e) => setSelectedIncome(e.target.value)}>
               {incomeLevels.map((level) => (
                 <option key={level} value={level.toLowerCase()}>
                   {level}
@@ -187,7 +187,7 @@ const EcologicalInference = ({ stateName }) => {
 
         <label style={{ paddingLeft: "20px" }}>
           Candidate:
-          <select value={selectedCandidate} onChange={(e) => setSelectedCandidate(e.target.value.toLowerCase())}>
+          <select className="allDropDown" value={selectedCandidate} onChange={(e) => setSelectedCandidate(e.target.value.toLowerCase())}>
             {candidates.map((candidate) => (
               <option key={candidate} value={candidate.toLowerCase()}>
                 {candidate}
@@ -199,7 +199,7 @@ const EcologicalInference = ({ stateName }) => {
         {/* New Region Type Dropdown */}
         <label style={{ paddingLeft: "20px" }}>
           Region Type:
-          <select value={selectedRegion} onChange={(e) => setSelectedRegion(e.target.value)}>
+          <select className="allDropDown" value={selectedRegion} onChange={(e) => setSelectedRegion(e.target.value)}>
             {regionTypes.map((region) => (
               <option key={region} value={region}>
                 {region}
@@ -214,9 +214,25 @@ const EcologicalInference = ({ stateName }) => {
           <Plot
             data={chartData.datasets}
             layout={{
-              title: `Support for ${selectedCandidate.charAt(0).toUpperCase() + selectedCandidate.slice(1)}`,
-              xaxis: { title: "Group Vote Percentage" },
-              yaxis: { title: "Probability Density" },
+              title: {
+                text: `Support for ${selectedCandidate.charAt(0).toUpperCase() + selectedCandidate.slice(1)}`,
+                font: { size: 24 },
+                color: "black",
+              },
+              xaxis: {
+                title: {
+                  text: "Group Vote Percentage",
+                  font: { size: 18 },
+                  color: "black",
+                },
+              },
+              yaxis: {
+                title: {
+                  text: "Probability Density",
+                  font: { size: 18 },
+                  color: "black",
+                },
+              },
               yaxis2: {
                 title: "Density",
                 overlaying: "y",

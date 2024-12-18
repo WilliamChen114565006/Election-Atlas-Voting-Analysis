@@ -181,6 +181,8 @@ export default function ScatterPlot({ stateName}) {
       x: {
         title: {
           display: true,
+          font: { size: 18 }, // Set the font size for the x-axis label
+          color: "black",
           text:
             selectedDisplay === "income"
               ? "Average Household Income"
@@ -198,6 +200,8 @@ export default function ScatterPlot({ stateName}) {
         title: {
           display: true,
           text: "Vote Share",
+          font: { size: 18 }, // Set the font size for the x-axis label
+          color: "black",
         },
         ticks: {
           callback: (value) => `${value}%`,
@@ -218,11 +222,11 @@ export default function ScatterPlot({ stateName}) {
 
   return (
     <div>
-      <h3>Precinct-by-Precinct Voting and Demographic Analysis</h3>
+      <h3 style={{ fontSize: '24px'}}>Precinct-by-Precinct Voting and Demographic Analysis</h3>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <label htmlFor="display-select">Select Display:</label>
-          <select id="display-select" value={selectedDisplay} onChange={handleDisplayChange}>
+          <select className="allDropDown" id="display-select" value={selectedDisplay} onChange={handleDisplayChange}>
             <option value="race">Race</option>
             <option value="income">Income</option>
             <option value="income_race">Income/Race</option>
@@ -230,7 +234,7 @@ export default function ScatterPlot({ stateName}) {
           {selectedDisplay !== "income" && (
             <>
               <label style={{ paddingLeft: "20px" }} htmlFor="race-select">Select Race:</label>
-              <select id="race-select" value={selectedRace} onChange={handleRaceChange}>
+              <select className="allDropDown" id="race-select" value={selectedRace} onChange={handleRaceChange}>
                 {races.map((race) => (
                   <option key={race} value={race.toLowerCase()}>
                     {race}
@@ -242,7 +246,7 @@ export default function ScatterPlot({ stateName}) {
           {selectedDisplay === "income" && (
             <>
               <label style={{ paddingLeft: "20px" }} htmlFor="region-select">Select Region:</label>
-              <select id="region-select" value={selectedRegion} onChange={handleRegionChange}>
+              <select className="allDropDown" id="region-select" value={selectedRegion} onChange={handleRegionChange}>
                 {regions.map((region) => (
                   <option key={region} value={region.toLowerCase()}>
                     {region}
@@ -257,7 +261,7 @@ export default function ScatterPlot({ stateName}) {
         </button>
       </div>
       {showTable ? (
-        <div style={{ maxHeight: '500px', overflowY: 'auto', marginTop: '20px' }}>
+        <div style={{ maxHeight: '450px', overflowY: 'auto', marginTop: '20px' }}>
           <table border="1" style={{width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ position: 'sticky', top: 0, backgroundColor: '#f1f1f1', zIndex: 1 }}>
@@ -286,7 +290,7 @@ export default function ScatterPlot({ stateName}) {
           </table>
         </div>
       ) : (
-        <Scatter data={data} options={options} />
+        <Scatter data={data} options={options} height={'40%'} width={'100%'}/>
       )}
     </div>
   );
