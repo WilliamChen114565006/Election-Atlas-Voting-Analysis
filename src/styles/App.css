@@ -365,7 +365,6 @@ body, html {
   padding: 15px;
   background-color: #f7f7f7;
   border-left: 2px solid #ddd;
-  transition: width 0.3s ease; /* Optional smooth transition */
   display: flex;
   padding-right: 0px;
   padding-bottom: 0px;
