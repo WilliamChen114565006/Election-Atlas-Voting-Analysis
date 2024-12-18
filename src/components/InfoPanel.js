@@ -110,7 +110,7 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
               <span style={{ fontWeight: 'bold' }}>Total State Population: </span>
               <span>{stateData?.TOT_POP?.toLocaleString() || ''} </span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Population Density: </span>
-              <span>{(stateData?.population_density)}/km<sup>2</sup></span>
+              <span>{(stateData?.population_density)}/sq mi</span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Districts (Dem/Rep): </span>
               <span>{(stateData?.democratic_districts + stateData?.republican_districts)} (<span style={{ color: 'blue' }}>{stateData?.democratic_districts}</span>/<span style={{ color: 'red' }}>{stateData?.republican_districts}</span>)</span>
               <span style={{ marginLeft: '20px', fontWeight: 'bold' }}>Precincts: </span>
@@ -126,8 +126,8 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
             </div>
             <Tabs value={activeTab} onChange={handleChange}>
               <Tab style={{ borderBottom: '1px solid lightgray' }} label="Overview" className="tabs-label" />
-              <Tab style={{ borderBottom: '1px solid lightgray' }} label="Gingles" className="tabs-label" />
               <Tab style={{ borderBottom: '1px solid lightgray' }} label="Congressional Table" className="tabs-label" />
+              <Tab style={{ borderBottom: '1px solid lightgray' }} label="Gingles" className="tabs-label" />
               <Tab style={{ borderBottom: '1px solid lightgray' }} label="Ecological Inference" className="tabs-label" />
               <Tab style={{ borderBottom: '1px solid lightgray' }} label="Ensemble Summary" className="tabs-label" />
               <Tab style={{ borderBottom: '1px solid lightgray' }} label="Ensemble Analysis" className="tabs-label" />
@@ -332,14 +332,14 @@ export default function InfoPanel({ stateName, currArea, handleArrowClick, currS
                 </div>
               )}
               {activeTab === 1 && (
-                <div className='tab-box' >
-                  <ScatterPlot 
-                  stateName={stateName} />
+                <div className='tab-box'>
+                  <CongressionalTable stateName={stateName} handleSelectedDistrict={handleSelectedDistrict} />
                 </div>
               )}
               {activeTab === 2 && (
-                <div className='tab-box'>
-                  <CongressionalTable stateName={stateName} handleSelectedDistrict={handleSelectedDistrict} />
+                <div className='tab-box' >
+                  <ScatterPlot 
+                  stateName={stateName} />
                 </div>
               )}
               {activeTab === 3 && (
