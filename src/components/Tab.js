@@ -103,7 +103,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
           className={`political-dropdown ${isDistrictActive ? 'disabled' : ''}`}
           disabled={isDistrictActive}
         >
-          <option value="" disabled>Voting</option>
+          <option value="" disabled>Voting:</option>
           <option value="Political/Income">Income</option>
           <option value="VotingMargin">Margin</option>
         </select>
@@ -115,7 +115,7 @@ const Tab = ({ isVisible, stateName, onPrecinctsClickLA, onPrecinctsClickNJ, onD
           className={`race-dropdown ${isDistrictActive ? 'disabled' : ''}`}
           disabled={isDistrictActive}
         >
-          <option value="" disabled>Race</option>
+          <option value="" disabled>Race:</option>
           <option value="white">White</option>
           <option value="black">Black</option>
           <option value="asian">Asian</option>

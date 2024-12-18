@@ -703,7 +703,7 @@ const getPrecinctVoteMarginStyle=(feature)=>{
     color: '#000000',
     weight: 0.5,
     opacity: 1,
-    fillOpacity: highlightedFeature === feature ? 0.7 : 0.8,
+    fillOpacity: highlightedFeature === feature ? 0.5 : 0.8,
   };
   }
 
